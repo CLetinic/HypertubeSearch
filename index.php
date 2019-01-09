@@ -78,6 +78,16 @@
 		{
 			color: white;
 		}
+		.col-md-3
+		{
+			padding-left: 0px;
+			padding-right: 0px;
+		}
+		.card-header
+		{
+			width: 100%
+		}
+
 	</style>
 </head>
 <body>
@@ -96,47 +106,59 @@
 				<button id="searchText" type="submit"><i class="fa fa-search"></i></button> 
 			</form> -->
 			<div id="searchForm" class="form-inline my-2 my-lg-0">
-				<input id="searchbar" class="form" type="search" placeholder="Search" style="border-radius: 0%;" onkeyup="getMovies(document.getElementById('searchbar').value)">
+				<input id="searchbar" class="form" type="search" placeholder="Search" style="border-radius: 0%;">
 			</div>
 		</div>
 	</div>
-	<div class="card border-info mb-3" id="result">  
-		</div>
-	<!-- <div class="container">
-		<div id="movies" class="row"></div>
-	</div> -->
+	<div class="container-fluid">
+		<div id="result" class="row">
+			<!-- <div class="card border-secondary mb-3" style="max-width: 20rem;">
+				<div class="card-header">
+					<h4 id="movieName" class="card-title"></h4>
+				</div>
+				<div class="card-body">
+					
+				</div>
+			</div> -->			
+		</div>		
+	</div>
 </body>
 </html>
 <script type="text/javascript">
-	// $(document).ready(function()
-	// {
-	// 	$('#searchForm').on('submit', function(e)
-	// 	{
-	// 		let searchText = $('#searchText').val();
-	// 		getMovies(searchText);
-	// 		e.preventDefault();
-	// 	});
-	// });
 
 	//https://www.youtube.com/watch?v=67eJTr6_ylY
 	//https://www.youtube.com/watch?v=aMKf3su6TjI
 	//https://www.youtube.com/watch?v=bpHtxx_wmqw
-	function getMovies(e)
-	{
-		$.get("http://www.omdbapi.com/?s="+e+"&apikey=1f18a935",function(rawdata)
-		{
-			var rawstring = JSON.stringify(rawdata);
-			data = JSON.parse(rawstring)
-			var title = data.Search[0].Title; 
-			var year = data.Search[0].Year;
-			var imdbURL = "https://www.imdb.com/title/"+data.Search[0].imdbID+"/";
-			var posterURL = data.Search[0].Poster;
-			document.getElementById('result').innerHTML="<h1>"+title+"</h1><br><img src='"+posterURL+"'/><br><p>Year Released: "+year+"</p><br><p>IMDb: <a href="+imdbURL+">"+imdbURL+"</a></p>";
-		});
-	}
 
-	// $("#searchbar".value).keyup(function() 
-	// {
-	// 	alert( "Handler for .keyup() called." );
-	// });
+	$('#searchbar').on('input', function(event) 
+	{
+		$('#result').fadeOut();
+		// $.get("https://www.omdbapi.com/?t="+this.value+"&plot=full&apikey=1f18a935",function(rawdata) // use this when clicked on
+		$.get(`https://www.omdbapi.com/?s=${event.target.value}&apikey=1f18a935`, function(rawdata)
+		{
+			if(rawdata.Response) 
+			{
+				$('#result').html('');
+				rawdata.Search.forEach(function(movie) 
+				{
+					var content;
+
+					content = 
+					`<div class="col-md-3 card border-secondary mb-3" style="max-width: 20rem; align-items: center;">
+						<div class="card-header">
+							<h5 id="movieName" class="card-title">${movie.Title}</h5>
+						</div>
+						<div class="card-body">
+							<br>
+							<img src="${movie.Poster}" style="width: 100%"/>
+							<br>
+							<p>Year Released: ${movie.Year}</p>
+						</div>
+					</div>`;
+				
+					$('#result').append(content).hide().fadeIn(); 
+				});
+			}
+		});
+	});
 </script>
