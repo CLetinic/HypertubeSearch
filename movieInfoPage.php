@@ -100,97 +100,69 @@
 		</div>
 	</div>
 	<br>
-	<div class="card border-info mb-3">                
+	<div id="result" class="card border-info mb-3">
+		<div class="card-header">
+			<h4 id="movieName" class="card-title">rawdata.Title</h4>
+			<p class="card-title">(rawdata.Year)</p>
+		</div>        
 		<div class="card-body">
-			<h4 class="card-title">Search for a Movie</h4>
-			<!-- IF YOU WANT TO HAVE A SEARCH BUTTON --> 
-			<!-- <form id="searchForm" class="form-inline my-2 my-lg-0">
-				<input class="form" type="search" placeholder="Search" style="border-radius: 0%;">
-				<button id="searchText" type="submit"><i class="fa fa-search"></i></button> 
-			</form> -->
-			<div id="searchForm" class="form-inline my-2 my-lg-0">
-				<input id="searchbar" class="form" type="search" placeholder="Search" style="border-radius: 0%;">
+			<!-- <h4 class="card-title">Heading</h4> -->		
+			<div class="container-fluid">
+				<div id="result" class="row">
+					<div class="col-sm-4 gallery-pad">
+						<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
+						<p></p>
+					</div>
+					<div class="col-sm-8 gallery-pad">
+						<p>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="container-fluid">
-		<div id="result" class="row">
-			<!-- <div class="card border-secondary mb-3" style="max-width: 20rem;">
-				<div class="card-header">
-					<h4 id="movieName" class="card-title"></h4>
-				</div>
-				<div class="card-body">
-					
-				</div>
-			</div> -->			
-		</div>		
 	</div>
 </body>
 </html>
 <script type="text/javascript">
 
-	//https://www.youtube.com/watch?v=67eJTr6_ylY
-	//https://www.youtube.com/watch?v=aMKf3su6TjI
-	//https://www.youtube.com/watch?v=bpHtxx_wmqw
-
-	$('#searchbar').on('input', function(event) 
+	var val = "<?php echo $_GET['id'] ?>";
+	if (val)
 	{
-		$('#result').fadeOut();
-		// $.get("https://www.omdbapi.com/?t="+this.value+"&plot=full&apikey=1f18a935",function(rawdata) // use this when clicked on
-		$.get(`https://www.omdbapi.com/?s=${event.target.value}&apikey=1f18a935`, function(rawdata)
+		console.log(val);
+		$.get("https://www.omdbapi.com/?i="+ val +"&plot=full&apikey=1f18a935",function(rawdata)
 		{
 			if(rawdata.Response) 
 			{
-				console(rawdata);
+				console.log(rawdata);
 				$('#result').html('');
-				rawdata.Search.forEach(function(movie) 
-				{
+				//rawdata.Search[0](function(rawdata) 
+				
+					console.log(rawdata.Title);
 					var content;
-					var movieid = movie.imdbID;
+					var movieid = rawdata.imdbID;
 					var srcImage;
 
-					if(movie.Poster === 'N/A')
+					if(rawdata.Poster === 'N/A')
 						srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
 					else 
-						srcImage = movie.Poster;
+						srcImage = rawdata.Poster;
 
 					content = 
-					`<div class="moviecards col-md-4 card border-secondary mb-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movieid + `')">
-						<div class="card-header">
-							<h5 id="movieName" class="card-title">`+ movie.Title +`</h5>
-						</div>
-						<div class="card-body">
-							<br>
-							<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
-							<br>
-							<p>Year Released: ` + movie.Year +`</p>
-						</div>
-					</div>`;
+					``;
+					// `<div class="moviecards col-md-4 card border-secondary mb-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movieid + `')">
+					// 	<div class="card-header">
+					// 		<h5 id="movieName" class="card-title">`+ rawdata.Title +`</h5>
+					// 	</div>
+					// 	<div class="card-body">
+					// 		<br>
+					// 		<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
+					// 		<br>
+					// 		<p>Year Released: ` + rawdata.Year +`</p>
+					// 	</div>
+					// </div>`;
 				
 					$('#result').append(content).hide().fadeIn(); 
-				});
 			}
 		});
-	});
+	}
 
-	function loadInfo(id)
-	{
-		location.href += 'movieInfoPage.php/?id='+ id +'';
-	};
-
-	function movieHoverIn(elem)
-	{
-		$(elem).removeClass('border-secondary');
-		$(elem).addClass('border-info');
-
-		$(elem).children().css("color", "white");
-	};
-	function movieHoverOut(elem)
-	{
-		console.log("hoveringOut");
-		$(elem).addClass('border-secondary');
-		$(elem).removeClass('border-info');
-
-		$(elem).children().css("color", "#888888");
-	};
 </script>
