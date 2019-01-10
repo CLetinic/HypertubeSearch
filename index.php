@@ -85,7 +85,11 @@
 		}
 		.card-header
 		{
-			width: 100%
+			width: 100%;
+		}
+		.card-footer
+		{
+			width: 100%;
 		}
 		h5
 		{
@@ -114,15 +118,7 @@
 		</div>
 	</div>
 	<div class="container-fluid">
-		<div id="result" class="row">
-			<!-- <div class="card border-secondary mb-3" style="max-width: 20rem;">
-				<div class="card-header">
-					<h4 id="movieName" class="card-title"></h4>
-				</div>
-				<div class="card-body">
-					
-				</div>
-			</div> -->			
+		<div id="result" class="row">	
 		</div>		
 	</div>
 </body>
@@ -136,38 +132,55 @@
 	$('#searchbar').on('input', function(event) 
 	{
 		$('#result').fadeOut();
-		// $.get("https://www.omdbapi.com/?t="+this.value+"&plot=full&apikey=1f18a935",function(rawdata) // use this when clicked on
+
+		// to get search data
 		$.get(`https://www.omdbapi.com/?s=${event.target.value}&apikey=1f18a935`, function(rawdata)
 		{
 			if(rawdata.Response) 
 			{
-				console(rawdata);
 				$('#result').html('');
 				rawdata.Search.forEach(function(movie) 
 				{
-					var content;
-					var movieid = movie.imdbID;
-					var srcImage;
+					// to get additional movie metadata
+					$.get("https://www.omdbapi.com/?i="+ movie.imdbID +"&plot=full&apikey=1f18a935",function(moviedata)
+					{
+						var content;
+						var imdbRating;
+						var srcImage;
+						var imdbURL = "https://www.imdb.com/title/" + movie.imdbID +"/";
 
-					if(movie.Poster === 'N/A')
-						srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
-					else 
-						srcImage = movie.Poster;
+						var rating;
+						imdbRating = moviedata.imdbRating;
+						if (imdbRating !== 'N/A')
+							var rating = imdbRating+"/10";
+						else
+							var rating = 'N/A';						
 
-					content = 
-					`<div class="moviecards col-md-4 card border-secondary mb-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movieid + `')">
-						<div class="card-header">
-							<h5 id="movieName" class="card-title">`+ movie.Title +`</h5>
-						</div>
-						<div class="card-body">
-							<br>
-							<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
-							<br>
-							<p>Year Released: ` + movie.Year +`</p>
-						</div>
-					</div>`;
-				
-					$('#result').append(content).hide().fadeIn(); 
+						if(movie.Poster === 'N/A')
+							srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
+						else 
+							srcImage = movie.Poster;			
+
+						content = 
+						`<div class="moviecards col-md-4 card border-secondary mb-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movie.imdbID + `')">
+							<div class="card-header">
+								<h5 id="movieName" class="card-title">`+ movie.Title +`</h5>
+							</div>
+							<div class="card-body">
+								<br>
+								<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
+								<br>
+								<p text-muted>Year Released: ` + movie.Year +`</p>
+							</div>
+							<div class="card-footer">
+								<p><i class="fas fa-star"></i> `+ rating +`</p>
+								<br>
+								<a href="`+ imdbURL +`">Go to IMDb Page</a>
+							</div>
+						</div>`;
+					
+						$('#result').append(content).hide().fadeIn(); 
+					});					
 				});
 			}
 		});
