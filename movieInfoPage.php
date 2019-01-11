@@ -91,6 +91,11 @@
 		{
 			font-size: 1.30rem;
 		}
+		.vl
+		{
+			width: 1px;
+			background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(139, 139, 139) 50%, rgba(0, 0, 0, 0) 100%);
+		}
 	</style>
 </head>
 <body>
@@ -100,25 +105,7 @@
 		</div>
 	</div>
 	<br>
-	<div id="result" class="card border-info mb-3">
-		<div class="card-header">
-			<h4 id="movieName" class="card-title">rawdata.Title</h4>
-			<p class="card-title">(rawdata.Year)</p>
-		</div>        
-		<div class="card-body">
-			<!-- <h4 class="card-title">Heading</h4> -->		
-			<div class="container-fluid">
-				<div id="result" class="row">
-					<div class="col-sm-4 gallery-pad">
-						<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
-						<p></p>
-					</div>
-					<div class="col-sm-8 gallery-pad">
-						<p>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div id="result" class="card border-info mb-3">		
 	</div>
 </body>
 </html>
@@ -132,34 +119,59 @@
 		{
 			if(rawdata.Response) 
 			{
-				console.log(rawdata);
+				console.log(rawdata.Title);
 				$('#result').html('');
-				//rawdata.Search[0](function(rawdata) 
-				
-					console.log(rawdata.Title);
+									
 					var content;
-					var movieid = rawdata.imdbID;
+					var imdbRating;
 					var srcImage;
+					var imdbURL = "https://www.imdb.com/title/" + rawdata.imdbID +"/";
 
+					// check if there is a rating given
+					var rating;
+					imdbRating = rawdata.imdbRating;
+					if (imdbRating !== 'N/A')
+						var rating = imdbRating+"/10";
+					else
+						var rating = 'N/A';						
+
+					// check if there is a movie poster avaliable
 					if(rawdata.Poster === 'N/A')
 						srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
 					else 
-						srcImage = rawdata.Poster;
+						srcImage = rawdata.Poster;	
 
 					content = 
-					``;
-					// `<div class="moviecards col-md-4 card border-secondary mb-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movieid + `')">
-					// 	<div class="card-header">
-					// 		<h5 id="movieName" class="card-title">`+ rawdata.Title +`</h5>
-					// 	</div>
-					// 	<div class="card-body">
-					// 		<br>
-					// 		<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
-					// 		<br>
-					// 		<p>Year Released: ` + rawdata.Year +`</p>
-					// 	</div>
-					// </div>`;
-				
+					`<div class="card-header">
+						<h4 id="movieName" class="card-title">`+ rawdata.Title+ `</h4>
+						<p class="text-muted">(` + rawdata.Year +`)</p>
+					</div>
+					<div class="card-body">	
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-sm-4 gallery-pad">
+									<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
+									<div class="row IMDb" style="padding: 5px;">
+										<div class="col-sm gallery-pad">
+											<p><i class="fas fa-star"></i> `+ rating +`</p>
+										</div>
+										<div class="vl"></div>
+										<div class="col-sm gallery-pad">
+											<a href="`+ imdbURL +`">Go to IMDb Page</a>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-8 gallery-pad">
+									<p><b>Genre:</b> `+ rawdata.Genre +`</p>
+									<br>
+									<p><b>Plot:</b> `+ rawdata.Plot +`</p>
+									<br>
+									<p><b>Cast:</b> `+ rawdata.Actors +`</p>
+								</div>
+							</div>
+						</div>
+					</div>`;
+			
 					$('#result').append(content).hide().fadeIn(); 
 			}
 		});

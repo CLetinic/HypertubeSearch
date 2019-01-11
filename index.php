@@ -24,6 +24,7 @@
 		crossorigin="anonymous">
 		<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/cyborg/bootstrap.min.css" rel="stylesheet" integrity="sha384-e4EhcNyUDF/kj6ZoPkLnURgmd8KW1B4z9GHYKb7eTG3w3uN8di6EBsN2wrEYr8Gc" crossorigin="anonymous">
 	<style type="text/css">
+		/* AESTHETIC */
 		.card
 		{
 			margin: auto;
@@ -78,14 +79,23 @@
 		{
 			color: white;
 		}
-		.col-md-4
+		.col-sm-4
 		{
 			padding-left: 0px;
 			padding-right: 0px;
 		}
+		.card-body
+		{
+			padding: 0.5rem 1.25rem 1.25rem 1.25rem /*top right bottom left*/
+		}
 		.card-header
 		{
 			width: 100%;
+			height: 100px;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			text-align: center;
 		}
 		.card-footer
 		{
@@ -93,7 +103,8 @@
 		}
 		h5
 		{
-			font-size: 1.30rem;
+			text-align: center;
+			vertical-align: middle;
 		}
 	</style>
 </head>
@@ -134,7 +145,7 @@
 		$('#result').fadeOut();
 
 		// to get search data
-		$.get(`https://www.omdbapi.com/?s=${event.target.value}&apikey=1f18a935`, function(rawdata)
+		$.get(`https://www.omdbapi.com/?s=${event.target.value}&type=movie&apikey=1f18a935`, function(rawdata)
 		{
 			if(rawdata.Response) 
 			{
@@ -142,13 +153,14 @@
 				rawdata.Search.forEach(function(movie) 
 				{
 					// to get additional movie metadata
-					$.get("https://www.omdbapi.com/?i="+ movie.imdbID +"&plot=full&apikey=1f18a935",function(moviedata)
+					$.get("https://www.omdbapi.com/?i="+ movie.imdbID +"&plot=full&type=movie&apikey=1f18a935",function(moviedata)
 					{
 						var content;
 						var imdbRating;
 						var srcImage;
 						var imdbURL = "https://www.imdb.com/title/" + movie.imdbID +"/";
 
+						// check if there is a rating given
 						var rating;
 						imdbRating = moviedata.imdbRating;
 						if (imdbRating !== 'N/A')
@@ -156,19 +168,28 @@
 						else
 							var rating = 'N/A';						
 
+						// check if there is a movie poster avaliable
 						if(movie.Poster === 'N/A')
 							srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
 						else 
-							srcImage = movie.Poster;			
+							srcImage = movie.Poster;	
+
+						// AESTHETIC - This is just a font size chaninging effect.
+						var titleSize;
+						if(movie.Title.length <= 65) 
+							titleSize = "font-size: 1.2rem";
+						else
+							 titleSize = "font-size: 100%";
 
 						content = 
-						`<div class="moviecards col-md-4 card border-secondary mb-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movie.imdbID + `')">
+						`<div class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movie.imdbID + `')">
 							<div class="card-header">
-								<h5 id="movieName" class="card-title">`+ movie.Title +`</h5>
+								<h5 class="card-title" style="`+ titleSize +`">`+ movie.Title +`</h5>
 							</div>
 							<div class="card-body">
+								<i class="far fa-eye" style="float: right; font-size: large;"></i>
 								<br>
-								<img src="` + srcImage + `" style="width: 100%; height: 450px;"/>
+								<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
 								<br>
 								<p text-muted>Year Released: ` + movie.Year +`</p>
 							</div>
@@ -191,6 +212,8 @@
 		location.href += 'movieInfoPage.php/?id='+ id +'';
 	};
 
+
+	// AESTHETIC - This is just a hovering affect
 	function movieHoverIn(elem)
 	{
 		$(elem).removeClass('border-secondary');
