@@ -119,7 +119,7 @@
 		{
 			if(rawdata.Response) 
 			{
-				console.log(rawdata.Title);
+				console.log(rawdata);
 				$('#result').html('');
 									
 					var content;

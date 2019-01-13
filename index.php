@@ -149,59 +149,93 @@
 		{
 			if(rawdata.Response) 
 			{
-				$('#result').html('');
-				rawdata.Search.forEach(function(movie) 
+
+
+				// ascending order
+				function SortByID(a, b) 
 				{
-					// to get additional movie metadata
+					return a.ID - b.ID; 
+				}
+
+				// ascending order
+				function SortByYear(a, b) 
+				{
+					return a.Year - b.Year; 
+				}
+
+
+				function SortByName(a, b) 
+				{
+					return ((a.Name == b.Name) ? 0 : ((a.Name > b.Name) ? 1 : -1 ));
+				}
+
+				// Call Sort By Name
+				result = rawdata.Search.sort(SortByYear);
+
+				console.log(result);
+				var index = 0;
+
+				$('#result').html('');
+				result.forEach(function(movie) 
+				{
+							
+					jQuery.ajaxSetup({async:false});
 					$.get("https://www.omdbapi.com/?i="+ movie.imdbID +"&plot=full&type=movie&apikey=1f18a935",function(moviedata)
 					{
-						var content;
-						var imdbRating;
-						var srcImage;
-						var imdbURL = "https://www.imdb.com/title/" + movie.imdbID +"/";
+						if(moviedata.Response)
+						{
+							index++;
 
-						// check if there is a rating given
-						var rating;
-						imdbRating = moviedata.imdbRating;
-						if (imdbRating !== 'N/A')
-							var rating = imdbRating+"/10";
-						else
-							var rating = 'N/A';						
+							var content;
+							var imdbRating;
+							var srcImage;
+							var imdbURL = "https://www.imdb.com/title/" + movie.imdbID +"/";
 
-						// check if there is a movie poster avaliable
-						if(movie.Poster === 'N/A')
-							srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
-						else 
-							srcImage = movie.Poster;	
+							// check if there is a rating given
+							var rating;
+							imdbRating = moviedata.imdbRating;
+							if (imdbRating !== 'N/A')
+								var rating = imdbRating+"/10";
+							else
+								var rating = 'N/A';						
 
-						// AESTHETIC - This is just a font size chaninging effect.
-						var titleSize;
-						if(movie.Title.length <= 65) 
-							titleSize = "font-size: 1.2rem";
-						else
-							 titleSize = "font-size: 100%";
+							// check if there is a movie poster avaliable
+							if(movie.Poster === 'N/A')
+								srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
+							else 
+								srcImage = movie.Poster;	
 
-						content = 
-						`<div class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movie.imdbID + `')">
-							<div class="card-header">
-								<h5 class="card-title" style="`+ titleSize +`">`+ movie.Title +`</h5>
-							</div>
-							<div class="card-body">
-								<i class="far fa-eye" style="float: right; font-size: large;"></i>
-								<br>
-								<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
-								<br>
-								<p text-muted>Year Released: ` + movie.Year +`</p>
-							</div>
-							<div class="card-footer">
-								<p><i class="fas fa-star"></i> `+ rating +`</p>
-								<br>
-								<a href="`+ imdbURL +`">Go to IMDb Page</a>
-							</div>
-						</div>`;
-					
-						$('#result').append(content).hide().fadeIn(); 
-					});					
+							// AESTHETIC - This is just a font size chaninging effect.
+							var titleSize;
+							if(movie.Title.length <= 65) 
+								titleSize = "font-size: 1.2rem";
+							else
+								 titleSize = "font-size: 100%";
+
+							content = 
+							`<div class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movie.imdbID + `')">
+								<div class="card-header">
+									<h5 class="card-title" style="`+ titleSize +`">`+ movie.Title +`</h5>
+								</div>
+								<div class="card-body">
+									<i class="far fa-eye" style="float: right; font-size: large;"></i>
+									<br>
+									<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
+									<br>
+									<p text-muted>Year Released: ` + movie.Year +`</p>
+								</div>
+								<div class="card-footer">
+									<p><i class="fas fa-star"></i> `+ rating +`</p>
+									<br>
+									<a href="`+ imdbURL +`">Go to IMDb Page</a>
+								</div>
+							</div>`;
+						
+							$('#result').append(content).hide().fadeIn(); 
+						}
+					});
+					jQuery.ajaxSetup({async:true});
+
 				});
 			}
 		});
@@ -212,6 +246,21 @@
 		location.href += 'movieInfoPage.php/?id='+ id +'';
 	};
 
+	// https://stackoverflow.com/questions/12551635/jquery-remove-duplicates-from-an-array-of-strings
+	function unique(arr) 
+	{
+		var result = [];
+		$.each(arr.imdbID, function(i, e) 
+		{
+			if ($.inArray(e.imdbID, result) == -1) // if you don't find a match
+			{
+				result.push(e); // push onto the array
+			}
+		});
+
+		console.log(result);
+		return result;
+	}
 
 	// AESTHETIC - This is just a hovering affect
 	function movieHoverIn(elem)
