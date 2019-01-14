@@ -119,7 +119,6 @@
 			vertical-align: middle;
 		}
 	</style>
-
 </head>
 <body>
 	<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
@@ -140,160 +139,49 @@
 				<input id="searchbar" class="form" type="search" placeholder="Search" style="border-radius: 0%;">
 			</div>
 			<br>
-			<div id="Sort_Year">
-				<div class="btn-group dropright">
-					<button type="button" class="btn btn-secondary"><span></span></button>						
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Year
-					</button>
-					<div class="dropdown-menu" x-placement="right-start" style="position: absolute; transform: translate3d(162px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-							<option class="dropdown-item">Oldest to Newest</option> <!-- Ascending -->
-							<option class="dropdown-item">Newest to Oldest</option> <!-- Descending -->
-					</div>
+			<!-- SORT  -->
+			<div id="sortForm" class="form-group" style="display: -webkit-inline-box;">
+				<div class="custom-control custom-radio">
+					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input" checked="">
+					<label class="custom-control-label" for="sortFormRadio1"> None </label>
 				</div>
-			</div>
-			<div id="Sort_Name">
-				<div class="btn-group dropright">
-					<button type="button" class="btn btn-secondary"><span></span></button>						
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Name
-					</button>
-					<div class="dropdown-menu" x-placement="right-start" style="position: absolute; transform: translate3d(162px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-							<option class="dropdown-item">A - Z</option> <!-- Descending --> 
-							<option class="dropdown-item">Z - A</option> <!-- Ascending -->
-					</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input">
+					<label class="custom-control-label" for="sortFormRadio2"> Name </label>
 				</div>
-			</div>
-			<div id="Sort_Rating">
-				<div class="btn-group dropright">
-					<button type="button" class="btn btn-secondary"><span></span></button>						
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Rating
-					</button>
-					<div class="dropdown-menu" x-placement="right-start" style="position: absolute; transform: translate3d(162px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-							<option class="dropdown-item">highest - lowest</option> <!-- Descending --> 
-							<option class="dropdown-item">lowest- highest</option> <!-- Ascending -->
-					</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input">
+					<label class="custom-control-label" for="sortFormRadio3"> Year </label>
 				</div>
-			</div>
-			<div id="Sort_Genre">
-				<div class="btn-group dropright">
-					<button type="button" class="btn btn-secondary"><span></span></button>						
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Genre
-					</button>
-					<div class="dropdown-menu" x-placement="right-start" style="overflow-y: scroll;
-    height: 8rem; position: absolute; transform: translate3d(162px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-								<option class="dropdown-item">Action</option>
-								<option class="dropdown-item">Adventure</option>
-								<option class="dropdown-item">Animation</option>
-								<option class="dropdown-item">Biography</option>
-								<option class="dropdown-item">Comedy</option>
-								<option class="dropdown-item">Crime	</option>
-								<option class="dropdown-item">Documentary</option>
-								<option class="dropdown-item">Drama</option>
-								<option class="dropdown-item">Family</option>
-								<option class="dropdown-item">Fantasy</option>
-								<option class="dropdown-item">Film Noir</option>
-								<option class="dropdown-item">History</option>	
-								<option class="dropdown-item">Horror</option>
-								<option class="dropdown-item">Music</option>
-								<option class="dropdown-item">Musical</option>
-								<option class="dropdown-item">Mystery</option>
-								<option class="dropdown-item">Romance</option>
-								<option class="dropdown-item">Sci-Fi</option>	
-								<option class="dropdown-item">Short</option>
-								<option class="dropdown-item">Sport</option>
-								<option class="dropdown-item">Superhero</option>
-								<option class="dropdown-item">Thriller</option>
-								<option class="dropdown-item">War</option>
-								<option class="dropdown-item">Western</option>
-					</div>
+					<div class="custom-control custom-radio">
+					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input">
+					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
+				</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input">
+					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 				</div>
 			</div>
 			<br>
-			<div id="Filter_Year">
-				<div class="btn-group dropright">
-					<button type="button" class="btn btn-secondary"><span></span></button>						
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Year
-					</button>
-					<div class="dropdown-menu" x-placement="right-start" style="position: absolute; transform: translate3d(162px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-							<div class="dropdown-item">
-								<select id="Filter_Year_From">
-								</select> 
-								to 
-								<select id="Filter_Year_To">
-								</select>
-							</div> <!-- Ascending -->
-					</div>
+			<!-- Filter  -->
+			<div id="filterForm" class="form-group" style="display: -webkit-inline-box;">
+				<div class="custom-control custom-radio">
+					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input" checked="">
+					<label class="custom-control-label" for="filterFormRadio1"> None </label>
+				</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input">
+					<label class="custom-control-label" for="filterFormRadio2"> Year </label>
+				</div>
+					<div class="custom-control custom-radio">
+					<input type="radio" id="filterFormRadio3" name="filterFormRadio" class="custom-control-input">
+					<label class="custom-control-label" for="filterFormRadio3"> Rating </label>
+				</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input">
+					<label class="custom-control-label" for="filterFormRadio4"> Genre </label>
 				</div>
 			</div>
-			<div id="Filter_Rating">
-				<div class="btn-group dropright">
-					<button type="button" class="btn btn-secondary"><span></span></button>						
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Rating
-					</button>
-					<div id="filter_rating_options" class="dropdown-menu" x-placement="right-start" style="position: absolute; transform: translate3d(162px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-							
-					</div>
-				</div>
-			</div>
-			<div id="Filter_Genre">
-				<div class="btn-group dropright">
-					<button type="button" class="btn btn-secondary"><span></span></button>						
-					<button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Genre
-					</button>
-					<div class="dropdown-menu" x-placement="right-start" style="overflow-y: scroll;
-   	 height: 8rem; position: absolute; transform: translate3d(162px, 0px, 0px); top: 0px; left: 0px; will-change: transform;">
-								<option class="dropdown-item">Action</option>
-								<option class="dropdown-item">Adventure</option>
-								<option class="dropdown-item">Animation</option>
-								<option class="dropdown-item">Biography</option>
-								<option class="dropdown-item">Comedy</option>
-								<option class="dropdown-item">Crime	</option>
-								<option class="dropdown-item">Documentary</option>
-								<option class="dropdown-item">Drama</option>
-								<option class="dropdown-item">Family</option>
-								<option class="dropdown-item">Fantasy</option>
-								<option class="dropdown-item">Film Noir</option>
-								<option class="dropdown-item">History</option>	
-								<option class="dropdown-item">Horror</option>
-								<option class="dropdown-item">Music</option>
-								<option class="dropdown-item">Musical</option>
-								<option class="dropdown-item">Mystery</option>
-								<option class="dropdown-item">Romance</option>
-								<option class="dropdown-item">Sci-Fi</option>	
-								<option class="dropdown-item">Short</option>
-								<option class="dropdown-item">Sport</option>
-								<option class="dropdown-item">Superhero</option>
-								<option class="dropdown-item">Thriller</option>
-								<option class="dropdown-item">War</option>
-								<option class="dropdown-item">Western</option>
-					</div>
-				</div>
-			</div>
-
-
-			<!-- This populates the numerical options above such as dates from 1921 to current date or a score out of 10-->
-			<script type="text/javascript">
-				var currentYear = (new Date).getFullYear();
-
-				for (var i = 1921; i <= currentYear; i++) 
-				{
-					//$('#Filter_Year_From').append($('<option>', {value:i, text:i}));
-					//$('#Filter_Year_To').append($('<option>', {value:i, text:i}));
-					$('#Filter_Year_From').append('<option value='+i+'>'+i+'</option>');
-					$('#Filter_Year_To').append('<option value='+i+'>'+i+'</option>');
-				}
-
-				for (var i = 0; i <= 10; i++) 
-				{
-					$('#filter_rating_options').append('<option class="dropdown-item" value='+i+'>'+i+' / 10</option>');
-				}
-			</script>
 		</div>
 	</div>
 	<div class="container-fluid">
@@ -425,16 +313,24 @@
 
 	//SORT
 	// by YEAR
-	// Descending
-	// Ascending
-	function inAscending(a, b)
+	function ascendingYear(a, b)
 	{
-		return a.metadata_type - b.metadata_type;		
+		return a.Year - b.Year;		
+	}
+	function descendingYear(a, b)
+	{
+		return a.Year - b.Year;		
 	}
 
 	// by NAME
-	// Descending
-	// Ascending
+	function ascendingName(a, b)
+	{
+		return a.Name - b.Name;		
+	}
+	function descendingName(a, b)
+	{
+		return a.Name - b.Name;		
+	}
 
 	//by RATING
 	// Descending
