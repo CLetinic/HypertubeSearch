@@ -181,25 +181,31 @@
 					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 					<div id="sortFormGenre" class="">
 						<select>
-							<option class="" value="28" >Action</option> <!-- 28 -->
-							<option class="" value="12">Adventure</option> <!-- 12 -->
-							<option class="" value="16">Animation</option> <!-- 16 -->
-							<option class="" value="35">Comedy</option> <!-- 35 -->
-							<option class="" value="80">Crime	</option> <!-- 80 -->
-							<option class="" value="99">Documentary</option> <!-- 99 -->
-							<option class="" value="18">Drama</option> <!-- 18 -->
-							<option class="" value="10751">Family</option> <!-- 10751 -->
-							<option class="" value="14">Fantasy</option> <!-- 14 -->
-							<option class="" value="36">History</option> <!-- 36 -->
-							<option class="" value="27">Horror</option> <!-- 27 -->
-							<option class="" value="10402">Music</option> <!-- 10402 -->
-							<option class="" value="9648">Mystery</option> <!-- 9648 -->
-							<option class="" value="10749">Romance</option> <!-- 10749 -->
-							<option class="" value="878">Sci-Fi</option> <!-- 878 -->	 
-							<option class="" value="53">Thriller</option> <!-- 53 -->
-							<option class="" value="10752">War</option> <!-- 10752 -->
-							<option class="" value="37">Western</option> <!-- 37 -->
-						</select>							
+							<option class=" ">Action</option>
+							<option class=" ">Adventure</option>
+							<option class=" ">Animation</option>
+							<option class=" ">Biography</option>
+							<option class=" ">Comedy</option>
+							<option class=" ">Crime	</option>
+							<option class=" ">Documentary</option>
+							<option class=" ">Drama</option>
+							<option class=" ">Family</option>
+							<option class=" ">Fantasy</option>
+							<option class=" ">Film Noir</option>
+							<option class=" ">History</option>	
+							<option class=" ">Horror</option>
+							<option class=" ">Music</option>
+							<option class=" ">Musical</option>
+							<option class=" ">Mystery</option>
+							<option class=" ">Romance</option>
+							<option class=" ">Sci-Fi</option>	
+							<option class=" ">Short</option>
+							<option class=" ">Sport</option>
+							<option class=" ">Superhero</option>
+							<option class=" ">Thriller</option>
+							<option class=" ">War</option>
+							<option class=" ">Western</option>
+						</select>						
 					</div>
 				</div>
 			</div>
@@ -233,24 +239,30 @@
 					<label class="custom-control-label" for="filterFormRadio4"> Genre </label>
 					<div id="sortFormGenre" class="">
 						<select>
-							<option class="" value="28" >Action</option> <!-- 28 -->
-							<option class="" value="12">Adventure</option> <!-- 12 -->
-							<option class="" value="16">Animation</option> <!-- 16 -->
-							<option class="" value="35">Comedy</option> <!-- 35 -->
-							<option class="" value="80">Crime	</option> <!-- 80 -->
-							<option class="" value="99">Documentary</option> <!-- 99 -->
-							<option class="" value="18">Drama</option> <!-- 18 -->
-							<option class="" value="10751">Family</option> <!-- 10751 -->
-							<option class="" value="14">Fantasy</option> <!-- 14 -->
-							<option class="" value="36">History</option> <!-- 36 -->
-							<option class="" value="27">Horror</option> <!-- 27 -->
-							<option class="" value="10402">Music</option> <!-- 10402 -->
-							<option class="" value="9648">Mystery</option> <!-- 9648 -->
-							<option class="" value="10749">Romance</option> <!-- 10749 -->
-							<option class="" value="878">Sci-Fi</option> <!-- 878 -->	 
-							<option class="" value="53">Thriller</option> <!-- 53 -->
-							<option class="" value="10752">War</option> <!-- 10752 -->
-							<option class="" value="37">Western</option> <!-- 37 -->
+							<option class=" ">Action</option>
+							<option class=" ">Adventure</option>
+							<option class=" ">Animation</option>
+							<option class=" ">Biography</option>
+							<option class=" ">Comedy</option>
+							<option class=" ">Crime	</option>
+							<option class=" ">Documentary</option>
+							<option class=" ">Drama</option>
+							<option class=" ">Family</option>
+							<option class=" ">Fantasy</option>
+							<option class=" ">Film Noir</option>
+							<option class=" ">History</option>	
+							<option class=" ">Horror</option>
+							<option class=" ">Music</option>
+							<option class=" ">Musical</option>
+							<option class=" ">Mystery</option>
+							<option class=" ">Romance</option>
+							<option class=" ">Sci-Fi</option>	
+							<option class=" ">Short</option>
+							<option class=" ">Sport</option>
+							<option class=" ">Superhero</option>
+							<option class=" ">Thriller</option>
+							<option class=" ">War</option>
+							<option class=" ">Western</option>
 						</select>						
 					</div>
 				</div>
@@ -279,10 +291,6 @@
 </html>
 <script type="text/javascript">
 
-	// const api = "&api_key=4084c07502a720532f5068169281abff";
-	// const endpoint = `https://api.themoviedb.org/3/search/movie?query=${search}${api}`;
-	// const poster = "https://image.tmdb.org/t/p/w600/";
-
 	//https://www.youtube.com/watch?v=67eJTr6_ylY
 	//https://www.youtube.com/watch?v=aMKf3su6TjI
 	//https://www.youtube.com/watch?v=bpHtxx_wmqw
@@ -293,83 +301,64 @@
 		$('#result').fadeOut();
 
 		// to get search data - this fetches an array of movies with matches to the search
-		// themoviedb has a much more powerful search functionality 
-		// Whereas omdb has a better resources from on IMDB
-		$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
+		$.get(`https://www.omdbapi.com/?s=${event.target.value}&type=movie&apikey=1f18a935`, function(rawdata)
 		{
-				result = rawdata.results;
+			if(rawdata.Response) 
+			{
+				// Call Sort By Name
+				result = remove_Dup(rawdata.Search);
+
+				console.log(result);
 
 				$('#result').html('');
+				// for each array fetched, 
 				result.forEach(function(movie) 
 				{
-					var moviedbYear = movie.release_date.substring(0, 4);
-					
-				
+
 					// take the movie id and return an object that stores all the meta data for that movie		
 					jQuery.ajaxSetup({async:false});
-					$.get("https://www.omdbapi.com/?t="+ movie.title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
+					$.get("https://www.omdbapi.com/?i="+ movie.imdbID +"&plot=full&type=movie&apikey=1f18a935",function(moviedata)
 					{
-						console.log(movie.title);
 						if(moviedata.Response)
 						{
-
-							//&y="movie.release_date.trimToLength(4);
-							console.log(moviedata);
-							console.log(movie);
 							var content;
 							var imdbRating;
+							var srcImage;
 							var imdbURL = "https://www.imdb.com/title/" + movie.imdbID +"/";
 
 							// check if there is a rating given
 							var rating;
 							imdbRating = moviedata.imdbRating;
-							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === 'null' || imdbRating === undefined)
-								rating = 'N/A';
+							if (imdbRating !== 'N/A')
+								var rating = imdbRating+"/10";
 							else
-								rating = imdbRating + "/10";					
+								var rating = 'N/A';						
 
 							// check if there is a movie poster avaliable
-							//var srcImage;
-
-							var srcImage;
-							console.log(moviedata.Poster);
-							if (!(movie.poster_path === null))
-								srcImage = "https://image.tmdb.org/t/p/w342" + movie.poster_path;
-							else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
-								srcImage = moviedata.Poster;
+							if(movie.Poster === 'N/A')
+								srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
 							else 
-								srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";	
-							// else if (moviedata.Poster !== 'N/A')
-							// 	srcImage = moviedata.Poster;
-							
+								srcImage = movie.Poster;	
 
 							// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
 							var titleSize;
-							if(movie.title.length <= 65) 
+							if(movie.Title.length <= 65) 
 								titleSize = "font-size: 1.2rem";
 							else
 								 titleSize = "font-size: 100%";
-							
-							var original_title;
-							if (movie.title != movie.original_title)
-								original_title = `<h6>(`+ movie.original_title +`)</h6>`;
-							else
-								original_title = ""
-							
 
 							// this is creating a div with the content inside of it
 							content = 
 							`<div class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movie.imdbID + `')">
 								<div class="card-header">
-									<h5 class="card-title" style="`+ titleSize +`">`+ movie.title +`</h5>
-									`+ original_title +`
+									<h5 class="card-title" style="`+ titleSize +`">`+ movie.Title +`</h5>
 								</div>
 								<div class="card-body">
 									<i class="far fa-eye" style="float: right; font-size: large;"></i>
 									<br>
 									<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
 									<br>
-									<p text-muted>Year Released: ` + moviedbYear +`</p>
+									<p text-muted>Year Released: ` + movie.Year +`</p>
 								</div>
 								<div class="card-footer">
 									<p><i class="fas fa-star"></i> `+ rating +`</p>
@@ -384,7 +373,7 @@
 					jQuery.ajaxSetup({async:true});
 
 				});
-			//}
+			}
 		});
 	});
 
