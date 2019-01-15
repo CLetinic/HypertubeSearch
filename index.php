@@ -147,22 +147,22 @@
 					<label class="custom-control-label" for="sortFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input">
+					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input" value="&sort_by=original_title.">
 					<label class="custom-control-label" for="sortFormRadio2"> Name </label>
 					<div id="sortFormName" class="">
-						<select>
-							<option class="">A - Z</option> <!-- Descending --> 
-							<option class="">Z - A</option> <!-- Ascending -->
+						<select id="sortFormNameSelector">
+							<option class="" value="desc" selected>A - Z</option> 
+							<option class="" value="asc">Z - A</option> <!-- Ascending -->
 						</select>						
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input">
+					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input" value="&sort_by=release_date.">
 					<label class="custom-control-label" for="sortFormRadio3"> Year </label>
 					<div id="sortFormYear" class="">
-						<select>
-							<option class="">Oldest - Newest</option> <!-- Ascending -->
-							<option class="">Newest - Oldest</option>
+						<select id="sortFormYearSelector">
+							<option class="" value="asc" >Oldest - Newest</option> <!-- Ascending -->
+							<option class="" value="desc" selected>Newest - Oldest</option> <!-- Descending release_date.desc primary_release_date.desc--> 
 						</select>						
 					</div>
 				</div>
@@ -170,8 +170,8 @@
 					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input">
 					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
 					<div id="sortFormRating" class="">
-						<select>
-							<option class="">Highest - Lowest</option> <!-- Descending --> 
+						<select id="sortFormRatingSelector">
+							<option class="" selected>Highest - Lowest</option> <!-- Descending --> <!-- This I will have to make my own -->
 							<option class="">Lowest - Highest</option> <!-- Ascending -->
 						</select>						
 					</div>
@@ -180,12 +180,12 @@
 					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input">
 					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 					<div id="sortFormGenre" class="">
-						<select>
-							<option class="" value="28" >Action</option> <!-- 28 -->
+						<select id="sortFormGenreSelector">
+							<option class="" value="28" selected>Action</option> <!-- 28 -->
 							<option class="" value="12">Adventure</option> <!-- 12 -->
 							<option class="" value="16">Animation</option> <!-- 16 -->
 							<option class="" value="35">Comedy</option> <!-- 35 -->
-							<option class="" value="80">Crime	</option> <!-- 80 -->
+							<option class="" value="80">Crime</option> <!-- 80 -->
 							<option class="" value="99">Documentary</option> <!-- 99 -->
 							<option class="" value="18">Drama</option> <!-- 18 -->
 							<option class="" value="10751">Family</option> <!-- 10751 -->
@@ -214,7 +214,7 @@
 				<div class="custom-control custom-radio">
 					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input">
 					<label class="custom-control-label" for="filterFormRadio2"> Year </label>
-					<div class="dropdown-item">
+					<div class="">
 						<select id="Filter_Year_From">
 						</select> 
 						to 
@@ -233,11 +233,11 @@
 					<label class="custom-control-label" for="filterFormRadio4"> Genre </label>
 					<div id="sortFormGenre" class="">
 						<select>
-							<option class="" value="28" >Action</option> <!-- 28 -->
+							<option class="" value="28" selected>Action</option> <!-- 28 -->
 							<option class="" value="12">Adventure</option> <!-- 12 -->
 							<option class="" value="16">Animation</option> <!-- 16 -->
 							<option class="" value="35">Comedy</option> <!-- 35 -->
-							<option class="" value="80">Crime	</option> <!-- 80 -->
+							<option class="" value="80">Crime</option> <!-- 80 -->
 							<option class="" value="99">Documentary</option> <!-- 99 -->
 							<option class="" value="18">Drama</option> <!-- 18 -->
 							<option class="" value="10751">Family</option> <!-- 10751 -->
@@ -257,17 +257,30 @@
 			</div>
 		</div>
 		<script type="text/javascript">
+
+			// Populate the sort/filter drop downs
 			var currentYear = (new Date).getFullYear();
 
 			for (var i = currentYear; i >= 1921; i--) 
-			{
-				$('#Filter_Year_From').append('<option value='+i+'>'+i+'</option>');
-				$('#Filter_Year_To').append('<option value='+i+'>'+i+'</option>');
+			{	
+				if (i == 0)
+				{
+					$('#Filter_Year_From').append('<option value='+ i +' selected>'+ i +'</option>');
+					$('#Filter_Year_To').append('<option value='+ i +' selected>'+ i +'</option>');
+				}
+				else 
+				{
+					$('#Filter_Year_From').append('<option value='+ i +'>'+ i +'</option>');
+					$('#Filter_Year_To').append('<option value='+ i +'>'+ i +'</option>');
+				}
 			}
 
 			for (var i = 10; i >= 0; i--) 
 			{
-				$('#filter_rating_options').append('<option value='+i+'>'+i+' / 10</option>');
+				if (i == 10)
+					$('#filter_rating_options').append('<option value='+ i +' selected>'+ i +' / 10</option>');
+				else
+					$('#filter_rating_options').append('<option value='+ i +'>'+ i +' / 10</option>');
 			}
 		</script>
 	</div>
@@ -288,22 +301,54 @@
 	//https://www.youtube.com/watch?v=bpHtxx_wmqw
 
 	// SEARCH
-	$('#searchbar').on('input', function(event) 
-	{
-		$('#result').fadeOut();
+	
 
-		// to get search data - this fetches an array of movies with matches to the search
-		// themoviedb has a much more powerful search functionality 
-		// Whereas omdb has a better resources from on IMDB
-		$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
+	$(document).ready(function()
+	{
+		const moviedbAPI = "&api_key=4084c07502a720532f5068169281abff";
+		const omdbAPI = "&apikey=1f18a935"
+		var sort;
+		var sortMethod;
+
+
+		//SEARCH OPTIONS
+		// check for a change in sort radios 
+		$("input[type='radio']").click(function()
+		{	
+			if (this.name == "sortFormRadio") 
+				sort = $("input[name='"+ this.name +"']:checked").val();  //elem.target
+			else 
+				sort = "";
+
+			sortMethod = $( this ).parent().find( "select" ).children("option:selected").val();
+
+		});
+		
+		// check for a change in selector 
+		$("select").change(function()
 		{
-				result = rawdata.results;
+			sortMethod = $(this).children("option:selected").val();
+		});
+
+		// SEARCH
+		$('#searchbar').on('input', function(event) 
+		{
+			$('#result').fadeOut();
+
+			// to get search data - this fetches an array of movies with matches to the search
+			// themoviedb has a much more powerful search functionality 
+			// Whereas omdb has a better resources from on IMDB
+			 var request = `https://api.themoviedb.org/3/search/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
+			 console.log(request);
+			$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&sort_by=release_date.asc&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
+			{
+				var result = rawdata.results;
+				console.log(rawdata.results);
 
 				$('#result').html('');
 				result.forEach(function(movie) 
 				{
-					var moviedbYear = movie.release_date.substring(0, 4);
-					
+					var moviedbYear = movie.release_date.substring(0, 4);					
 				
 					// take the movie id and return an object that stores all the meta data for that movie		
 					jQuery.ajaxSetup({async:false});
@@ -312,25 +357,21 @@
 						console.log(movie.title);
 						if(moviedata.Response)
 						{
-
-							//&y="movie.release_date.trimToLength(4);
-							console.log(moviedata);
-							console.log(movie);
+							//console.log(moviedata);
+							//console.log(movie);
 							var content;
 							var imdbRating;
-							var imdbURL = "https://www.imdb.com/title/" + movie.imdbID +"/";
+							var imdbURL = "https://www.imdb.com/title/"+ movie.imdbID +"/";
 
 							// check if there is a rating given
 							var rating;
 							imdbRating = moviedata.imdbRating;
-							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === 'null' || imdbRating === undefined)
+							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null')
 								rating = 'N/A';
 							else
 								rating = imdbRating + "/10";					
 
 							// check if there is a movie poster avaliable
-							//var srcImage;
-
 							var srcImage;
 							console.log(moviedata.Poster);
 							if (!(movie.poster_path === null))
@@ -339,9 +380,6 @@
 								srcImage = moviedata.Poster;
 							else 
 								srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";	
-							// else if (moviedata.Poster !== 'N/A')
-							// 	srcImage = moviedata.Poster;
-							
 
 							// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
 							var titleSize;
@@ -382,11 +420,15 @@
 						}
 					});
 					jQuery.ajaxSetup({async:true});
-
 				});
-			//}
+			});
 		});
 	});
+
+	function getSelectorValue()
+	{
+
+	}
 
 	function loadInfo(id)
 	{
@@ -416,28 +458,6 @@
 		}
 
 		return result;
-	}
-
-	//SORT
-	// by YEAR
-	function ascendingYear(a, b)
-	{
-		return a.Year - b.Year;		
-	}
-	function descendingYear(a, b)
-	{
-		return a.Year - b.Year;		
-	}
-
-	// by NAME
-	function ascendingName(a, b)
-	{
-		return a.Name - b.Name;		
-	}
-	function descendingName(a, b)
-	{
-		return a.Name - b.Name;	
-			//return ((a.Name == b.Name) ? 0 : ((a.Name > b.Name) ? 1 : -1 ));
 	}
 
 	//by RATING
