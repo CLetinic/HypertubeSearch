@@ -143,7 +143,7 @@
 			<div id="sortForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Sort</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input" checked="">
+					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input" value="none" checked="">
 					<label class="custom-control-label" for="sortFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
@@ -167,17 +167,17 @@
 					</div>
 				</div>
 					<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input">
+					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input" value="rating">
 					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
 					<div id="sortFormRating" class="">
 						<select id="sortFormRatingSelector">
-							<option class="" selected>Highest - Lowest</option> <!-- Descending --> <!-- This I will have to make my own -->
-							<option class="">Lowest - Highest</option> <!-- Ascending -->
+							<option class="" value="desc" selected>Highest - Lowest</option> <!-- Descending --> <!-- This I will have to make my own -->
+							<option class="" value="asc">Lowest - Highest</option> <!-- Ascending -->
 						</select>						
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input">
+					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input" value="genre">
 					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 					<div id="sortFormGenre" class="">
 						<select id="sortFormGenreSelector">
@@ -305,11 +305,23 @@
 
 	$(document).ready(function()
 	{
+		/*
+			https://www.themoviedb.org/documentation/api?language=en-US
+
+			"/search - Text based search is the most common way. You provide a query string and we provide the closest match. Searching by text takes into account all original, translated, alternative names and titles.
+
+			/discover - Sometimes it useful to search for movies and TV shows based on filters or definable values like ratings, certifications or release dates. The discover method make this easy. For some example queries, and to get an idea about the things you can do with discover, take a look here.
+
+			/find - The last but still very useful way to find data is with existing external IDs. For example, if you know the IMDB ID of a movie, TV show or person, you can plug that value into this method and we'll return anything that matches. This can be very useful when you have an existing tool and are adding our service to the mix."
+		*/
+
 		const moviedbAPI = "&api_key=4084c07502a720532f5068169281abff";
 		const omdbAPI = "&apikey=1f18a935"
+
+		var moviedbMethod;
+
 		var sort;
 		var sortMethod;
-
 
 		//SEARCH OPTIONS
 		// check for a change in sort radios 
@@ -335,15 +347,115 @@
 		{
 			$('#result').fadeOut();
 
+			moviedbMethod = "search";
+
 			// to get search data - this fetches an array of movies with matches to the search
 			// themoviedb has a much more powerful search functionality 
 			// Whereas omdb has a better resources from on IMDB
-			 var request = `https://api.themoviedb.org/3/search/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
-			 console.log(request);
+			 var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
+			 //console.log(request);
 			$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&sort_by=release_date.asc&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
 			{
-				var result = rawdata.results;
-				console.log(rawdata.results);
+				var result = sortFunction(rawdata.results, sort, sortMethod);
+				console.log(result);
+				console.log(sort);
+				console.log(sortMethod);
+				//var result = rawdata.results;
+				//var result = sortFunction(rawdata.results, sort, sortMethod);
+
+				// if (sort == "&sort_by=original_title.")
+				// {
+				// 	if (sortMethod == "asc")
+				// 	{
+				// 		result.sort(function(a, b)
+				// 		{
+				// 			return a.title - b.title;
+				// 		});
+				// 	}
+				// 	else if (sortMethod == "desc")
+				// 	{
+				// 		result.sort(function(a, b)
+				// 		{
+				// 			return b.title - a.title;
+				// 		});
+				// 	}
+				// }			
+				// else if (sort == "&sort_by=release_date.")
+				// {
+				// 	console.log("here");
+				// 	if (sortMethod == "asc")
+				// 	{
+				// 		result.sort(function(a, b)
+				// 		{
+				// 			return a.release_date - b.release_date;
+				// 		});
+				// 	}
+				// 	else if (sortMethod == "desc")
+
+
+				// if (sort == "&sort_by=release_date.")
+				// {
+				// 	if (sortMethod == "desc")
+				// 	{
+				// 		result = smallTobig(rawdata.results);
+				// 		function smallTobig(result) 
+				// 		{
+				// 			var arr = []
+				// 			for(var i = 0; i < result.length; i++) 
+				// 			{
+				// 				for(var j = i; j < result.length; j++) 
+				// 				{
+				// 					if (result[i].release_date > result[j].release_date) 
+				// 						[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+				// 				}
+				// 					arr.push(result[i]);
+				// 			}
+				// 			return arr;
+				// 		}
+				// 	}
+				// }	
+
+
+				// }
+				// else if (sort == "rating")
+				// {
+				// 	// if (sortMeth == "asc")
+				// 	// {
+				// 	// 	movieArray.sort(function(a, b)
+				// 	// 	{
+				// 	// 		return a.imdbRating - b.imdbRating;
+				// 	// 	});
+				// 	// }
+				// 	// else if (sortMeth == "desc")
+				// 	// {
+				// 	// 	movieArray.sort(function(a, b)
+				// 	// 	{
+				// 	// 		return b.imdbRating - a.imdbRating;
+				// 	// 	});
+				// 	// }
+				// }
+				// else if (sort ==  "genre")
+				// {
+				// 	// if (sortMeth == "asc")
+				// 	// {
+				// 	// 	movieArray.sort(function(a, b)
+				// 	// 	{
+				// 	// 		return a.Name - b.Name;
+				// 	// 	});
+				// 	// }
+				// 	// else if (sortMeth == "desc")
+				// 	// {
+				// 	// 	movieArray.sort(function(a, b)
+				// 	// 	{
+				// 	// 		return b.Name - a.Name;
+				// 	// 	});
+				// 	// }
+				// }
+				// else
+				// 	result = rawdata.results;
+
+				
+
 
 				$('#result').html('');
 				result.forEach(function(movie) 
@@ -354,7 +466,7 @@
 					jQuery.ajaxSetup({async:false});
 					$.get("https://www.omdbapi.com/?t="+ movie.title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
 					{
-						console.log(movie.title);
+						//console.log(movie.title);
 						if(moviedata.Response)
 						{
 							//console.log(moviedata);
@@ -373,7 +485,7 @@
 
 							// check if there is a movie poster avaliable
 							var srcImage;
-							console.log(moviedata.Poster);
+							//console.log(moviedata.Poster);
 							if (!(movie.poster_path === null))
 								srcImage = "https://image.tmdb.org/t/p/w342" + movie.poster_path;
 							else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
@@ -423,65 +535,197 @@
 				});
 			});
 		});
-	});
 
-	function getSelectorValue()
-	{
-
-	}
-
-	function loadInfo(id)
-	{
-		location.href += 'movieInfoPage.php/?id='+ id +'';
-	};
-
-	// removes any duplicate movies just in case
-	function remove_Dup(arr) 
-	{
-		var result = []; // this is what must be returned
-		var temp = []; // this array will store the ID and can compare against 
-
-		for (var i = 0; i < arr.length; i++) 
+		function sortFunction(movieArray, sortType, sortMeth)
 		{
-			for (var j = 1; j < arr.length; j++) 
-			{	
-				if (arr[i].imdbID != arr[j].imdbID)
+			console.log("in function");
+			console.log(movieArray);
+			console.log(sortType);
+			console.log(sortMeth);
+
+			if (sortType == "&sort_by=release_date.")
+			{
+				if (sortMeth == "desc")
 				{
-					if (!(temp.includes(arr[i].imdbID)))
+					var sortt = sortType.substring(9, (sortType.length - 1));
+					console.log(sortt);
+					movieArray = ascending(movieArray, );
+					function ascending(result, field) 
 					{
-						temp.push(arr[i].imdbID);
-						if (!(result.includes(arr[i])))
-							result.push(arr[i]);
+						var arr = []
+						for(var i = 0; i < result.length; i++) 
+						{
+							for(var j = i; j < result.length; j++) 
+							{
+								if (result[i].release_date > result[j].release_date) 
+									[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+							}
+								arr.push(result[i]);
+						}
+						return arr;
 					}
 				}
+			}
+
+				return movieArray;
+
+			/*
+			if (sortType == "&sort_by=original_title.")
+			{
+				if (sortMeth == "asc")
+				{
+					movieArray.sort(function(a, b)
+					{
+						return a.title - b.title;
+					});
+				}
+				else if (sortMeth == "desc")
+				{
+					movieArray.sort(function(a, b)
+					{
+						return b.title - a.title;
+					});
+				}
 			}			
+			else if (sortType ==  "&sort_by=release_date.")
+			{
+				if (sortMeth == "asc")
+				{
+					movieArray.sort(function(a, b)
+					{
+						console.log(a.release_date - b.release_date);
+					});
+				}
+				else if (sortMeth == "desc")
+				{
+					movieArray.sort(function(a, b)
+					{
+						console.log(b.release_date - a.release_date);
+					});
+				}			
+			}
+			else if (sortType == "rating")
+			{
+				// if (sortMeth == "asc")
+				// {
+				// 	movieArray.sort(function(a, b)
+				// 	{
+				// 		return a.imdbRating - b.imdbRating;
+				// 	});
+				// }
+				// else if (sortMeth == "desc")
+				// {
+				// 	movieArray.sort(function(a, b)
+				// 	{
+				// 		return b.imdbRating - a.imdbRating;
+				// 	});
+				// }
+			}
+			else if (sortType ==  "genre")
+			{
+				// if (sortMeth == "asc")
+				// {
+				// 	movieArray.sort(function(a, b)
+				// 	{
+				// 		return a.Name - b.Name;
+				// 	});
+				// }
+				// else if (sortMeth == "desc")
+				// {
+				// 	movieArray.sort(function(a, b)
+				// 	{
+				// 		return b.Name - a.Name;
+				// 	});
+				// }
+			}
+			else
+				return movieArray;
+
+			return movieArray;
+			*/
 		}
 
-		return result;
-	}
+		// function ascendingYear(a, b)
+		// {
+		// 	return a.Year - b.Year;		
+		// }
+		// function descendingYear(a, b)
+		// {
+		// 	return a.Year - b.Year;		
+		// }
+		// // by NAME
+		// function ascendingName(a, b)
+		// {
+		// 	return a.Name - b.Name;		
+		// }
+		// function descendingName(a, b)
+		// {
+		// 	return a.Name - b.Name;	
+		// 		//return ((a.Name == b.Name) ? 0 : ((a.Name > b.Name) ? 1 : -1 ));
+		// }
+		// function ascendingRating(a, b)
+		// {
+		// 	return a.Year - b.Year;		
+		// }
+		// function descendingRating(a, b)
+		// {
+		// 	return a.Year - b.Year;		
+		// }
 
-	//by RATING
-	// Descending
-	// Ascending
+		function loadInfo(id)
+		{
+			location.href += 'movieInfoPage.php/?id='+ id +'';
+		};
 
-	//by Genre
+		// removes any duplicate movies just in case
+		function remove_Dup(arr) 
+		{
+			var result = []; // this is what must be returned
+			var temp = []; // this array will store the ID and can compare against 
 
-		
-	// AESTHETIC - This is just a hovering affect
-	function movieHoverIn(elem)
-	{
-		$(elem).removeClass('border-secondary');
-		$(elem).addClass('border-info');
+			for (var i = 0; i < arr.length; i++) 
+			{
+				for (var j = 1; j < arr.length; j++) 
+				{	
+					if (arr[i].imdbID != arr[j].imdbID)
+					{
+						if (!(temp.includes(arr[i].imdbID)))
+						{
+							temp.push(arr[i].imdbID);
+							if (!(result.includes(arr[i])))
+								result.push(arr[i]);
+						}
+					}
+				}			
+			}
 
-		$(elem).children().css("color", "white");
-	};
-	function movieHoverOut(elem)
-	{
-		console.log("hoveringOut");
-		$(elem).addClass('border-secondary');
-		$(elem).removeClass('border-info');
+			return result;
+		}
 
-		$(elem).children().css("color", "#888888");
-	};
+		//by RATING
+		// Descending
+		// Ascending
+
+		//by Genre
+	});
+
+			// AESTHETIC - This is just a hovering affect
+		function movieHoverIn(elem)
+		{
+			$(elem).removeClass('border-secondary');
+			$(elem).addClass('border-info');
+
+			$(elem).children().css("color", "white");
+		};
+		function movieHoverOut(elem)
+		{
+			console.log("hoveringOut");
+			$(elem).addClass('border-secondary');
+			$(elem).removeClass('border-info');
+
+			$(elem).children().css("color", "#888888");
+		};
+
+	
 	
 </script>
