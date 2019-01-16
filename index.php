@@ -357,15 +357,12 @@
 			$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&sort_by=release_date.asc&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
 			{
 				var result = sortFunction(rawdata.results, sort, sortMethod);
-				console.log(result);
-				console.log(sort);
-				console.log(sortMethod);	
-
 
 				$('#result').html('');
 				result.forEach(function(movie) 
 				{
-					var moviedbYear = movie.release_date.substring(0, 4);					
+					var moviedbYear = movie.release_date.substring(0, 4);
+					console.log(result);					
 				
 					// take the movie id and return an object that stores all the meta data for that movie		
 					jQuery.ajaxSetup({async:false});
@@ -373,14 +370,22 @@
 					{
 						if(moviedata.Response)
 						{
+							console.log(result);
+							console.log(movie);
+
 							var content;
 							var imdbRating;
-							var imdbURL = "https://www.imdb.com/title/"+ movie.imdbID +"/";
+							var imdbURL;
+
+							if (movie.imdbID === 'N/A' || movie.imdbID === 'undefined' || movie.imdbID === undefined || movie.imdbID === 'null' || movie.imdbID === null)
+								imdbURL = "N/A";
+							else
+								imdbURL = "https://www.imdb.com/title/"+ movie.imdbID +"/";
 
 							// check if there is a rating given
 							var rating;
 							imdbRating = moviedata.imdbRating;
-							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null')
+							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' | imdbRating === null)
 								rating = 'N/A';
 							else
 								rating = imdbRating + "/10";					
@@ -469,47 +474,185 @@
 	});
 
 	function sortFunction(movieArray, sortType, sortMeth)
-		{
+	{
 			
 			//console.log(movieArray);
 			if (sortType == "rating")
 			{
-				if (sortMeth == "desc")
+				let arr = []
+				for(let i = 0; i < movieArray.length; i++) 
 				{
-					let omdbObj = getOMDB(movieArray[0]);
-					console.log("here");
-					console.log(omdbObj); //movieArray = sortAscending(movieArray, sortType);
-					console.log("\n\n\n\n");
-					
+					let moviedbYear = movieArray[i].release_date.substring(0, 4);
+					$.get("https://www.omdbapi.com/?t="+ movieArray[i].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata1)
+					{
+						//movieArray[i].ImdbRating = parseFloat(moviedata.imdbRating);
+							console.log("1");
+							for(let j = i; j < moviedata1.length; j++) 
+							{	
+								let moviedbYear = movieArray[j].release_date.substring(0, 4);
+								$.get("https://www.omdbapi.com/?t="+ movieArray[j].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata2)
+								{
+									console.log("2");
+									console.log("ImdbRating= " + moviedata1[i].ImdbRating);
+									if (!(moviedata1[i].ImdbRating === 'N/A' || moviedata1[i].ImdbRating === 'undefined' || movieArray[i].ImdbRating === undefined || moviedata1[i].ImdbRating === 'null'))
+									{
+										console.log("3");
+										
+										if (sort == "asc")
+										{
+											console.log("4A");
+											if (moviedata1[i].ImdbRating >moviedata2[j].ImdbRating) 
+												[moviedata1[i], moviedata2[j]] = [moviedata2[j], moviedata1[i]]; // simplified swap
+										}
+										else if (sort == "desc")
+										{
+											console.log("4D");
+											if (moviedata1[i].ImdbRating < moviedata2[j].ImdbRating) 
+												[moviedata1[i], moviedata2[j]] = [moviedata2[j], moviedata1[i]];
+										}
+									}
+								});
+							}
+								arr.push(moviedata1[i]);
+						});
+						return movieArray = arr;
+					}
 				}
+			
+					
+					/*
+					let arr = []
+					for(let i = 0; i < result.length; i++) 
+					{	console.log("1");
+						for(let j = i; j < result.length; j++) 
+						{	
+							console.log("2");
+							console.log("ImdbRating= " + result[i].ImdbRating);
+							if (!(result[i].ImdbRating === 'N/A' || result[i].ImdbRating === 'undefined' || result[i].ImdbRating === undefined || result[i].ImdbRating === 'null'))
+							{
+								console.log("3");
+								
+								if (sort == "asc")
+								{
+									console.log("4A");
+									if (result[i].ImdbRating > result[j].ImdbRating) 
+										[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+								}
+								else if (sort == "desc")
+								{
+									console.log("4D");
+									if (result[i].ImdbRating < result[j].ImdbRating) 
+										[result[i], result[j]] = [result[j], result[i]];
+								}
+							}
+						}
+						console.log("5");
+							arr.push(result[i]);
+					}
+					console.log("6");
+					console.log(arr);
+					return arr;
+				}
+				*/
+
+
+					// function sortRating(result, sort) 
+					// {
+					// 	var ret = result;
+					// 	console.log("result");
+					// 	console.log(ret[0].ImdbRating);
+
+					// 	let arr = []
+					// 	for(let i = 0; i < result.length; i++) 
+					// 	{	console.log("1");
+					// 		for(let j = i; j < result.length; j++) 
+					// 		{	
+					// 			console.log("2");
+					// 			console.log("ImdbRating= " + result[i].ImdbRating);
+					// 			if (!(result[i].ImdbRating === 'N/A' || result[i].ImdbRating === 'undefined' || result[i].ImdbRating === undefined || result[i].ImdbRating === 'null'))
+					// 			{
+					// 				console.log("3");
+									
+					// 				if (sort == "asc")
+					// 				{
+					// 					console.log("4A");
+					// 					if (result[i].ImdbRating > result[j].ImdbRating) 
+					// 						[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+					// 				}
+					// 				else if (sort == "desc")
+					// 				{
+					// 					console.log("4D");
+					// 					if (result[i].ImdbRating < result[j].ImdbRating) 
+					// 						[result[i], result[j]] = [result[j], result[i]];
+					// 				}
+					// 			}
+					// 		}
+					// 		console.log("5");
+					// 			arr.push(result[i]);
+					// 	}
+					// 	console.log("6");
+					// 	console.log(arr);
+					// 	return arr;
+					// }
+
+					// movieArray = getRating(movieArray, sortMeth);
+				// 	function getRating(result, method)
+				// 	{
+				// 		let arr = []
+				// 		let iRating;
+				// 		let jRating; 
+
+				// 		for(let i = 0; i < result.length; i++) 
+				// 		{
+				// 			let moviedbYear = result[i].release_date.substring(0, 4);
+				// 			$.get("https://www.omdbapi.com/?t="+ result[i].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
+				// 			{										
+				// 				iRating = moviedata.imdbRating;
+				// 				console.log("iRating " +iRating);
+				// 			});
+
+				// 			for(let j = i; j < result.length; j++) 
+				// 			{
+				// 				let moviedbYear = result[j].release_date.substring(0, 4);
+				// 				$.get("https://www.omdbapi.com/?t="+ result[j].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
+				// 				{										
+				// 					jRating = moviedata.imdbRating;
+				// 					console.log("jRating "+jRating);
+				// 				});
+
+				// 				if (method == "asc")
+				// 				{
+				// 					console.log("swapAsc");
+				// 					if (iRating > jRating) 
+				// 						[result[i], result[j]] = [result[j], result[i]]; 
+				// 				}
+				// 				else if (method == "desc")
+				// 				{
+				// 					console.log("swapDesc");
+
+				// 					if (iRating < jRating) 
+				// 						[result[i], result[j]] = [result[j], result[i]];
+				// 				}
+				// 			}
+				// 				arr.push(result[i]);
+				// 		}
+				// 		return arr;
+				// 	}
+					
+				// }
+
+
 				//else if (sortMeth == "desc")
 					//console.log(getOMDB(movieArray[0]).imdbRating); //movieArray = sortDescending(movieArray, sortType);
 
-				function getOMDB(arr)
-				{
-					// var = omObj;
-					let moviedbYear = arr.release_date.substring(0, 4);
 
-					$.get("https://www.omdbapi.com/?t="+ arr.title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
-					{
-						//if (moviedata.Response)
-						//{
-							console.log("omdb");
-							console.log(moviedata);
-							return moviedata;
-						//}
-						// return;
-					});
-					// return omObj;
-				}
-			}
 
 			if (sortMeth == "asc")
 				movieArray = sortAscending(movieArray, sortType);
 			else if (sortMeth == "desc")
 				movieArray = sortDescending(movieArray, sortType);
 			return movieArray;
-		}
+	}
 
 		function sortAscending(result, field) 
 		{
