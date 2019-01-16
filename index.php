@@ -143,11 +143,11 @@
 			<div id="sortForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Sort</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input" value="none" checked="">
+					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input" value="" checked="">
 					<label class="custom-control-label" for="sortFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input" value="&sort_by=original_title.">
+					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input" value="title"> <!-- value="&sort_by=original_title." -->
 					<label class="custom-control-label" for="sortFormRadio2"> Name </label>
 					<div id="sortFormName" class="">
 						<select id="sortFormNameSelector">
@@ -157,7 +157,8 @@
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input" value="&sort_by=release_date.">
+					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input" value="release_date">
+					<!-- value="&sort_by=release_date." -->
 					<label class="custom-control-label" for="sortFormRadio3"> Year </label>
 					<div id="sortFormYear" class="">
 						<select id="sortFormYearSelector">
@@ -538,36 +539,52 @@
 
 		function sortFunction(movieArray, sortType, sortMeth)
 		{
-			console.log("in function");
-			console.log(movieArray);
-			console.log(sortType);
-			console.log(sortMeth);
 
-			if (sortType == "&sort_by=release_date.")
-			{
-				if (sortMeth == "desc")
+			//if (sortType == "&sort_by=release_date.")
+			//{
+				if (sortMeth == "asc")
 				{
-					var sortt = sortType.substring(9, (sortType.length - 1));
-					console.log(sortt);
-					movieArray = ascending(movieArray, );
-					function ascending(result, field) 
+					// var sortt = sortType.substring(9, (sortType.length - 1));
+					movieArray = sortAscending(movieArray, sortType);
+
+					function sortAscending(result, field) 
 					{
-						var arr = []
-						for(var i = 0; i < result.length; i++) 
+						let arr = []
+						for(let i = 0; i < result.length; i++) 
 						{
-							for(var j = i; j < result.length; j++) 
+							for(let j = i; j < result.length; j++) 
 							{
-								if (result[i].release_date > result[j].release_date) 
+								if (result[i][field] > result[j][field]) 
 									[result[i], result[j]] = [result[j], result[i]]; // simplified swap
 							}
 								arr.push(result[i]);
 						}
 						return arr;
 					}
+					return movieArray;
 				}
-			}
+				else if (sortMeth == "desc")
+				{
+					movieArray = sortDescending(movieArray, sortType);
 
-				return movieArray;
+					function sortDescending(result, field) 
+					{
+						let arr = []
+
+						for(let i = 0; i < result.length; i++) 
+						{
+							for(let j = i; j < result.length; j++) 
+							{
+								if (result[i][field] < result[j][field]) 
+									[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+							}
+								arr.push(result[i]);
+						}
+						return arr;
+					}
+					return movieArray;
+				}			
+			}
 
 			/*
 			if (sortType == "&sort_by=original_title.")
@@ -643,7 +660,7 @@
 
 			return movieArray;
 			*/
-		}
+		//}
 
 		// function ascendingYear(a, b)
 		// {
