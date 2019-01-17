@@ -428,6 +428,17 @@
 		return a.Name - b.Name;	
 			//return ((a.Name == b.Name) ? 0 : ((a.Name > b.Name) ? 1 : -1 ));
 	}
+	function ascendingRating(a, b)
+	{
+		return a.Year - b.Year;		
+	}
+	function descendingRating(a, b)
+	{
+		return a.Year - b.Year;		
+	}
+	fd
+
+
 
 	//by RATING
 	// Descending

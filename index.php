@@ -168,7 +168,7 @@
 					</div>
 				</div>
 					<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input" value="rating">
+					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input" value="imdbRating">
 					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
 					<div id="sortFormRating" class="">
 						<select id="sortFormRatingSelector">
@@ -362,6 +362,7 @@
 				result.forEach(function(movie) 
 				{
 					var moviedbYear = movie.release_date.substring(0, 4);
+					console.log("\nRESULT\n");
 					console.log(result);					
 				
 					// take the movie id and return an object that stores all the meta data for that movie		
@@ -370,25 +371,24 @@
 					{
 						if(moviedata.Response)
 						{
-							console.log(result);
-							console.log(movie);
-
 							var content;
 							var imdbRating;
 							var imdbURL;
 
-							if (movie.imdbID === 'N/A' || movie.imdbID === 'undefined' || movie.imdbID === undefined || movie.imdbID === 'null' || movie.imdbID === null)
-								imdbURL = "N/A";
-							else
-								imdbURL = "https://www.imdb.com/title/"+ movie.imdbID +"/";
-
 							// check if there is a rating given
 							var rating;
 							imdbRating = moviedata.imdbRating;
-							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' | imdbRating === null)
+							console.log(imdbRating);
+							if (imdbRating === 'N/A' && imdbRating === 'undefined' && imdbRating === undefined && imdbRating === 'null' && imdbRating === null && isNaN(imdbRating) && isNaN(movie.imdbID)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
 								rating = 'N/A';
 							else
-								rating = imdbRating + "/10";					
+								rating = imdbRating + "/10";	
+
+							if (movie.imdbID === 'N/A' || movie.imdbID === 'undefined' || movie.imdbID === undefined || movie.imdbID === 'null' || movie.imdbID === null || isNaN(movie.imdbID) || rating === 'N/A')
+								imdbURL = "<p> </p>";
+							else
+								imdbURL = "<a href='https://www.imdb.com/title/"+ movie.imdbID +"/'>Go to IMDb Page</a>";
+								//imdbURL = "https://www.imdb.com/title/"+ movie.imdbID +"/"				
 
 							// check if there is a movie poster avaliable
 							var srcImage;
@@ -431,14 +431,13 @@
 								<div class="card-footer">
 									<p><i class="fas fa-star"></i> `+ rating +`</p>
 									<br>
-									<a href="`+ imdbURL +`">Go to IMDb Page</a>
+									`+ imdbURL +`
 								</div>
 							</div>`;
 						
 							$('#result').append(content).hide().fadeIn(); 
 						}
 					});
-					jQuery.ajaxSetup({async:true});
 				});
 			});
 		});		
@@ -474,233 +473,115 @@
 	});
 
 	function sortFunction(movieArray, sortType, sortMeth)
-	{
-			
-			//console.log(movieArray);
-			if (sortType == "rating")
-			{
-				let arr = []
-				for(let i = 0; i < movieArray.length; i++) 
-				{
-					let moviedbYear = movieArray[i].release_date.substring(0, 4);
-					$.get("https://www.omdbapi.com/?t="+ movieArray[i].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata1)
-					{
-						//movieArray[i].ImdbRating = parseFloat(moviedata.imdbRating);
-							console.log("1");
-							for(let j = i; j < moviedata1.length; j++) 
-							{	
-								let moviedbYear = movieArray[j].release_date.substring(0, 4);
-								$.get("https://www.omdbapi.com/?t="+ movieArray[j].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata2)
-								{
-									console.log("2");
-									console.log("ImdbRating= " + moviedata1[i].ImdbRating);
-									if (!(moviedata1[i].ImdbRating === 'N/A' || moviedata1[i].ImdbRating === 'undefined' || movieArray[i].ImdbRating === undefined || moviedata1[i].ImdbRating === 'null'))
-									{
-										console.log("3");
-										
-										if (sort == "asc")
-										{
-											console.log("4A");
-											if (moviedata1[i].ImdbRating >moviedata2[j].ImdbRating) 
-												[moviedata1[i], moviedata2[j]] = [moviedata2[j], moviedata1[i]]; // simplified swap
-										}
-										else if (sort == "desc")
-										{
-											console.log("4D");
-											if (moviedata1[i].ImdbRating < moviedata2[j].ImdbRating) 
-												[moviedata1[i], moviedata2[j]] = [moviedata2[j], moviedata1[i]];
-										}
-									}
-								});
-							}
-								arr.push(moviedata1[i]);
-						});
-						return movieArray = arr;
-					}
-				}
-			
-					
-					/*
-					let arr = []
-					for(let i = 0; i < result.length; i++) 
-					{	console.log("1");
-						for(let j = i; j < result.length; j++) 
-						{	
-							console.log("2");
-							console.log("ImdbRating= " + result[i].ImdbRating);
-							if (!(result[i].ImdbRating === 'N/A' || result[i].ImdbRating === 'undefined' || result[i].ImdbRating === undefined || result[i].ImdbRating === 'null'))
-							{
-								console.log("3");
-								
-								if (sort == "asc")
-								{
-									console.log("4A");
-									if (result[i].ImdbRating > result[j].ImdbRating) 
-										[result[i], result[j]] = [result[j], result[i]]; // simplified swap
-								}
-								else if (sort == "desc")
-								{
-									console.log("4D");
-									if (result[i].ImdbRating < result[j].ImdbRating) 
-										[result[i], result[j]] = [result[j], result[i]];
-								}
-							}
-						}
-						console.log("5");
-							arr.push(result[i]);
-					}
-					console.log("6");
-					console.log(arr);
-					return arr;
-				}
-				*/
+	{	
+			console.log(movieArray);
+			console.log(sortType);
+			console.log(sortMeth);
 
-
-					// function sortRating(result, sort) 
-					// {
-					// 	var ret = result;
-					// 	console.log("result");
-					// 	console.log(ret[0].ImdbRating);
-
-					// 	let arr = []
-					// 	for(let i = 0; i < result.length; i++) 
-					// 	{	console.log("1");
-					// 		for(let j = i; j < result.length; j++) 
-					// 		{	
-					// 			console.log("2");
-					// 			console.log("ImdbRating= " + result[i].ImdbRating);
-					// 			if (!(result[i].ImdbRating === 'N/A' || result[i].ImdbRating === 'undefined' || result[i].ImdbRating === undefined || result[i].ImdbRating === 'null'))
-					// 			{
-					// 				console.log("3");
-									
-					// 				if (sort == "asc")
-					// 				{
-					// 					console.log("4A");
-					// 					if (result[i].ImdbRating > result[j].ImdbRating) 
-					// 						[result[i], result[j]] = [result[j], result[i]]; // simplified swap
-					// 				}
-					// 				else if (sort == "desc")
-					// 				{
-					// 					console.log("4D");
-					// 					if (result[i].ImdbRating < result[j].ImdbRating) 
-					// 						[result[i], result[j]] = [result[j], result[i]];
-					// 				}
-					// 			}
-					// 		}
-					// 		console.log("5");
-					// 			arr.push(result[i]);
-					// 	}
-					// 	console.log("6");
-					// 	console.log(arr);
-					// 	return arr;
-					// }
-
-					// movieArray = getRating(movieArray, sortMeth);
-				// 	function getRating(result, method)
-				// 	{
-				// 		let arr = []
-				// 		let iRating;
-				// 		let jRating; 
-
-				// 		for(let i = 0; i < result.length; i++) 
-				// 		{
-				// 			let moviedbYear = result[i].release_date.substring(0, 4);
-				// 			$.get("https://www.omdbapi.com/?t="+ result[i].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
-				// 			{										
-				// 				iRating = moviedata.imdbRating;
-				// 				console.log("iRating " +iRating);
-				// 			});
-
-				// 			for(let j = i; j < result.length; j++) 
-				// 			{
-				// 				let moviedbYear = result[j].release_date.substring(0, 4);
-				// 				$.get("https://www.omdbapi.com/?t="+ result[j].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
-				// 				{										
-				// 					jRating = moviedata.imdbRating;
-				// 					console.log("jRating "+jRating);
-				// 				});
-
-				// 				if (method == "asc")
-				// 				{
-				// 					console.log("swapAsc");
-				// 					if (iRating > jRating) 
-				// 						[result[i], result[j]] = [result[j], result[i]]; 
-				// 				}
-				// 				else if (method == "desc")
-				// 				{
-				// 					console.log("swapDesc");
-
-				// 					if (iRating < jRating) 
-				// 						[result[i], result[j]] = [result[j], result[i]];
-				// 				}
-				// 			}
-				// 				arr.push(result[i]);
-				// 		}
-				// 		return arr;
-				// 	}
-					
-				// }
-
-
-				//else if (sortMeth == "desc")
-					//console.log(getOMDB(movieArray[0]).imdbRating); //movieArray = sortDescending(movieArray, sortType);
-
-
+			if (sortType == "imdbRating")
+			{				
+				var newResult = getRating(movieArray);
+				movieArray = newResult;
+			}
 
 			if (sortMeth == "asc")
 				movieArray = sortAscending(movieArray, sortType);
 			else if (sortMeth == "desc")
 				movieArray = sortDescending(movieArray, sortType);
+
+			if (sortType == "imdbRating")
+				movieArray = removeNoRating(movieArray);
+
 			return movieArray;
 	}
 
-		function sortAscending(result, field) 
+	//RATING
+	// fetch the rating
+	function getRating(result)
+	{
+		for(let i = 0; i < result.length; i++) 
 		{
-			let arr = []
-			for(let i = 0; i < result.length; i++) 
+			console.log(result[i].title);
+			let moviedbYear = result[i].release_date.substring(0, 4);
+			jQuery.ajaxSetup({async:false});
+			$.get("https://www.omdbapi.com/?t="+ result[i].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
 			{
-				for(let j = i; j < result.length; j++) 
-				{
-					if (result[i][field] > result[j][field]) 
-						[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+				if(moviedata.Response)
+				{								
+					result[i]["imdbRating"] = Number(moviedata.imdbRating);
+					result[i]["imdbID"] = moviedata.imdbID;
+					console.log("RATING \n");
+					console.log(result[i]["imdbRating"]);
 				}
-					arr.push(result[i]);
-			}
-			return arr;
+			});					
 		}
+		return result;	
+	}
+	// remove results that have no rating
+	function removeNoRating(result)
+	{
+		let arr = [];
 
-		function sortDescending(result, field) 
+		for(let i = 0; i < result.length; i++) 
 		{
-			let arr = []
-
-			for(let i = 0; i < result.length; i++) 
+			console.log(result[i].imdbRating);
+			if (!(result[i].imdbRating === 'N/A' || result[i].imdbRating === 'undefined' || result[i].imdbRating === undefined || result[i].imdbRating === 'null' && result[i].imdbRating === null || isNaN(result[i].imdbRating)))
 			{
-				for(let j = i; j < result.length; j++) 
-				{
-					if (result[i][field] < result[j][field]) 
-						[result[i], result[j]] = [result[j], result[i]]; // simplified swap
-				}
-					arr.push(result[i]);
+				arr.push(result[i]);
 			}
-			return arr;
 		}
+		return arr;	
+	}
 
-		// AESTHETIC - This is just a hovering affect
-		function movieHoverIn(elem)
+
+	function sortAscending(result, field) 
+	{
+		console.log("\nASC");
+		let arr = [];
+		for(let i = 0; i < result.length; i++) 
 		{
-			$(elem).removeClass('border-secondary');
-			$(elem).addClass('border-info');
+			for(let j = i; j < result.length; j++) 
+			{
+				if (result[i][field] > result[j][field]) 
+					[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+			}
+				arr.push(result[i]);
+		}
+		return arr;
+	}
 
-			$(elem).children().css("color", "white");
-		};
-		function movieHoverOut(elem)
+	function sortDescending(result, field) 
+	{
+		console.log("\nDESC");
+		let arr = [];
+
+		for(let i = 0; i < result.length; i++) 
 		{
-			console.log("hoveringOut");
-			$(elem).addClass('border-secondary');
-			$(elem).removeClass('border-info');
+			for(let j = i; j < result.length; j++) 
+			{
+				if (result[i][field] < result[j][field]) 
+					[result[i], result[j]] = [result[j], result[i]]; // simplified swap
+			}
+				arr.push(result[i]);
+		}
+		return arr;
+	}
 
-			$(elem).children().css("color", "#888888");
-		};
+	// AESTHETIC - This is just a hovering affect
+	function movieHoverIn(elem)
+	{
+		$(elem).removeClass('border-secondary');
+		$(elem).addClass('border-info');
+
+		$(elem).children().css("color", "white");
+	};
+	function movieHoverOut(elem)
+	{
+		$(elem).addClass('border-secondary');
+		$(elem).removeClass('border-info');
+
+		$(elem).children().css("color", "#888888");
+	};
 
 	
 	
