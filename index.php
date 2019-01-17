@@ -178,7 +178,7 @@
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input" value="genre">
+					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input" value="genre_ids">
 					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 					<div id="sortFormGenre" class="">
 						<select id="sortFormGenreSelector">
@@ -358,13 +358,14 @@
 			{
 				var result = sortFunction(rawdata.results, sort, sortMethod);
 
+				console.log(rawdata.results[0].genre_ids[0]);
+
+
 				$('#result').html('');
 				result.forEach(function(movie) 
 				{
 					var moviedbYear = movie.release_date.substring(0, 4);
-					console.log("\nRESULT\n");
-					console.log(result);					
-				
+
 					// take the movie id and return an object that stores all the meta data for that movie		
 					jQuery.ajaxSetup({async:false});
 					$.get("https://www.omdbapi.com/?t="+ movie.title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
@@ -378,8 +379,7 @@
 							// check if there is a rating given
 							var rating;
 							imdbRating = moviedata.imdbRating;
-							console.log(imdbRating);
-							if (imdbRating === 'N/A' && imdbRating === 'undefined' && imdbRating === undefined && imdbRating === 'null' && imdbRating === null && isNaN(imdbRating) && isNaN(movie.imdbID)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
+							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null && isNaN(imdbRating) && isNaN(movie.imdbID)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
 								rating = 'N/A';
 							else
 								rating = imdbRating + "/10";	
@@ -474,14 +474,22 @@
 
 	function sortFunction(movieArray, sortType, sortMeth)
 	{	
-			console.log(movieArray);
-			console.log(sortType);
-			console.log(sortMeth);
+		console.log(movieArray);
+		console.log(sortType);
+		console.log(sortMeth);
 
+		if (sortType != "None")  
+		{
 			if (sortType == "imdbRating")
 			{				
 				var newResult = getRating(movieArray);
 				movieArray = newResult;
+			}
+			if (sortType == "genre_ids")
+			{
+				// sortMeth is the genre.id in this case
+				console.log(sortGenre(movieArray, sortMeth));
+
 			}
 
 			if (sortMeth == "asc")
@@ -490,9 +498,9 @@
 				movieArray = sortDescending(movieArray, sortType);
 
 			if (sortType == "imdbRating")
-				movieArray = removeNoRating(movieArray);
-
-			return movieArray;
+				movieArray = appendNoRating(movieArray, sortMeth); //movieArray = removeNoRating(movieArray); 
+		}
+		return movieArray;
 	}
 
 	//RATING
@@ -510,13 +518,12 @@
 				{								
 					result[i]["imdbRating"] = Number(moviedata.imdbRating);
 					result[i]["imdbID"] = moviedata.imdbID;
-					console.log("RATING \n");
-					console.log(result[i]["imdbRating"]);
 				}
 			});					
 		}
 		return result;	
 	}
+
 	// remove results that have no rating
 	function removeNoRating(result)
 	{
@@ -524,7 +531,6 @@
 
 		for(let i = 0; i < result.length; i++) 
 		{
-			console.log(result[i].imdbRating);
 			if (!(result[i].imdbRating === 'N/A' || result[i].imdbRating === 'undefined' || result[i].imdbRating === undefined || result[i].imdbRating === 'null' && result[i].imdbRating === null || isNaN(result[i].imdbRating)))
 			{
 				arr.push(result[i]);
@@ -533,10 +539,81 @@
 		return arr;	
 	}
 
+	// place not rating items at the end
+	function appendNoRating(result, sort)
+	{
+		let arr = [];
+		let arr2 = [];
+
+		for(let i = 0; i < result.length; i++) 
+		{
+			if (!(result[i].imdbRating === 'N/A' || result[i].imdbRating === 'undefined' || result[i].imdbRating === undefined || result[i].imdbRating === 'null' && result[i].imdbRating === null || isNaN(result[i].imdbRating)))
+			{
+				arr.push(result[i]);
+			}
+			else 
+				arr2.push(result[i]);
+		}
+
+		if (sort == "asc")
+			arr = arr2.concat(arr);
+		else if (sort == "desc")
+			arr = arr.concat(arr2);
+		return arr;	
+	}
+
+	// look for selected genre and put that at the top.
+	function sortGenre(result, genreID)
+	{
+		console.log("\nGENRE SORT\n")
+
+		console.log(genreID);
+		let arr = [];
+		let arr2 = [];
+
+		console.log(arr);
+
+		// iterate through the movie arrays
+		for(let i = 0; i < result.length; i++) 
+		{
+			console.log(result[i]);
+			// iterate through the genre array
+			for(let j = 0; j < result[i].genre_ids.length; j++) 
+			{
+				console.log(result[i].genre_ids[j]);
+				if (result[i].genre_ids[j] == genreID)
+				{
+					console.log("is genre");
+					if (!(arr.includes(result[i])))
+					{
+						console.log("is - here");
+						console.log(arr);
+						arr.push(result[i]);
+						console.log(arr);
+					}
+				}
+				else 
+				{
+					console.log("not genre");
+					if (!(arr.includes(result[i])))
+					{
+						console.log("not - here");
+						console.log(arr2);
+						arr2.push(result[i]);
+						console.log(arr2);
+					}
+				}
+			}				
+		}
+
+		arr = arr2.concat(arr);
+		console.log("arr");
+		console.log(arr);
+		return arr;	
+	}
 
 	function sortAscending(result, field) 
 	{
-		console.log("\nASC");
 		let arr = [];
 		for(let i = 0; i < result.length; i++) 
 		{
@@ -552,7 +629,6 @@
 
 	function sortDescending(result, field) 
 	{
-		console.log("\nDESC");
 		let arr = [];
 
 		for(let i = 0; i < result.length; i++) 
