@@ -143,11 +143,11 @@
 			<div id="sortForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Sort</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input" value="" checked="">
+					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input sort" value="" checked="">
 					<label class="custom-control-label" for="sortFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input" value="title"> <!-- value="&sort_by=original_title." -->
+					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input sort" value="title"> <!-- value="&sort_by=original_title." -->
 					<label class="custom-control-label" for="sortFormRadio2"> Name </label>
 					<div id="sortFormName" class="">
 						<select id="sortFormNameSelector">
@@ -157,7 +157,7 @@
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input" value="release_date">
+					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input sort" value="Year">
 					<!-- value="&sort_by=release_date." -->
 					<label class="custom-control-label" for="sortFormRadio3"> Year </label>
 					<div id="sortFormYear" class="">
@@ -168,7 +168,7 @@
 					</div>
 				</div>
 					<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input" value="imdbRating">
+					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input sort" value="imdbRating">
 					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
 					<div id="sortFormRating" class="">
 						<select id="sortFormRatingSelector">
@@ -178,7 +178,7 @@
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input" value="genre_ids">
+					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input sort" value="genre_ids">
 					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 					<div id="sortFormGenre" class="">
 						<select id="sortFormGenreSelector">
@@ -209,11 +209,11 @@
 			<div id="filterForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Filter</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input" value="" checked="">
+					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input filter" value="" checked="">
 					<label class="custom-control-label" for="filterFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input">
+					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input filter" value="Year">
 					<label class="custom-control-label" for="filterFormRadio2"> Year </label>
 					<div class="">
 						<select id="filterFormYearSelectorFrom">
@@ -224,7 +224,7 @@
 					</div>
 				</div>
 					<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio3" name="filterFormRadio" class="custom-control-input">
+					<input type="radio" id="filterFormRadio3" name="filterFormRadio" class="custom-control-input filter" value="imdbRating">
 					<label class="custom-control-label" for="filterFormRadio3"> Rating </label>
 					<div class="">
 						<select id="filterFormRatingSelectorFrom">
@@ -235,7 +235,7 @@
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input" value="genre_ids">
+					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input filter" value="genre_ids">
 					<label class="custom-control-label" for="filterFormRadio4"> Genre </label>
 					<div class="">
 						<select id="filterFormGenreSelector">
@@ -265,9 +265,9 @@
 		<script type="text/javascript">
 
 			// Populate the sort/filter drop downs
-			var currentYear = (new Date).getFullYear();
+			let currentYear = (new Date).getFullYear();
 
-			for (var i = currentYear; i >= 1900; i--) 
+			for (let i = currentYear; i >= 1900; i--) 
 			{	
 				if (i == 0)
 				{
@@ -281,7 +281,7 @@
 				}
 			}
 
-			for (var i = 10; i >= 0; i--) 
+			for (let i = 10; i >= 0; i--) 
 			{
 				if (i == 10)
 				{
@@ -290,8 +290,8 @@
 				}
 				else
 				{
-					$('filterFormRatingSelectorTo').append('<option value='+ i +'>'+ i +' / 10</option>');
-					$('#filterFormRatingSelectorFrom').append('<option value='+ i +' selected>'+ i +' / 10</option>');
+					$('#filterFormRatingSelectorTo').append('<option value='+ i +'>'+ i +' / 10</option>');
+					$('#filterFormRatingSelectorFrom').append('<option value='+ i +'>'+ i +' / 10</option>');
 				}
 			}
 		</script>
@@ -335,31 +335,27 @@
 		var filter;
 
 		//SEARCH OPTIONS
-		// check for a change in sort radios 
+		// check for a change in sort or filter radios 
 		$("input[type='radio']").click(function()
 		{	
-			if (this.name == "sortFormRadio") 
+			if (this.name == "sortFormRadio") //SORT OPTIONS 
+			{
 				sort = $("input[name='"+ this.name +"']:checked").val();  //elem.target
-			else 
+				sortMethod = $( this ).parent().find( "select" ).children("option:selected").val();
+			}
+			else if (this.name == "filterFormRadio") //FILTER OPTIONS
+				filter = $("input[name='"+ this.name +"']:checked").val();
+			else
+			{
 				sort = "";
-
-			sortMethod = $( this ).parent().find( "select" ).children("option:selected").val();
-
+				filter = "";
+			}
 		});
 		
 		// check for a change in selector 
-		$("select").change(function()
+		$("select.sort").change(function()
 		{
 			sortMethod = $(this).children("option:selected").val();
-		});
-
-		//FILTER OPTIONS
-		$("input[type='radio']").click(function()
-		{	
-			if (this.name == "filterFormRadio") 
-				filter = $("input[name='"+ this.name +"']:checked").val();  //elem.target
-			else 
-				filter = "";
 		});
 
 		// SEARCH
@@ -376,8 +372,17 @@
 			// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
 
 			$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
-			{		
-				var result = appendMovieData(rawdata.results);
+			{	
+				console.log("filter");
+				console.log(filter);
+				console.log("sort");
+				console.log(sort);
+				console.log("sortMethod");
+				console.log(sortMethod);
+
+				var result; 
+				result = appendMovieData(rawdata.results);
+				result = filterFunction(result, filter);
 				result = sortFunction(result, sort, sortMethod);	
 
 				$('#result').html('');
@@ -392,16 +397,17 @@
 					// check if there is a rating given
 					var rating;
 					imdbRating = moviedata.imdbRating;
-					if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null && isNaN(imdbRating) && isNaN(movie.imdbID)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
+					if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null || isNaN(imdbRating)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
 						rating = 'N/A';
 					else
 						rating = imdbRating + "/10";	
 
-					if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || isNaN(moviedata.imdbID) || rating === 'N/A')
+					if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || rating === 'N/A')
 						imdbURL = "<p> </p>";
 					else
-						imdbURL = "<a href='https://www.imdb.com/title/"+ moviedata.imdbID +"/'>Go to IMDb Page</a>";
-						//imdbURL = "https://www.imdb.com/title/"+ moviedata.imdbID +"/"
+						imdbURL = "<a href='"+ moviedata.imdbURL +"'>Go to IMDb Page</a>";
+					console.log(moviedata.imdbURL);
+					console.log(imdbURL);
 
 
 					// check if there is a movie poster avaliable
@@ -486,29 +492,31 @@
 
 	function filterFunction(movieArray, filterType)
 	{
+		console.log("\n\n FILTER \n\n")
+		console.log("before");
 		console.log(movieArray);
-		console.log(filterType);
 
 		if (filterType != "None")
 		{
-			if (filterType == release_date)
+			if (filterType == "Year")
 			{
 				let to = $("#filterFormYearSelectorTo").children("option:selected").val();
 				let from = $("#filterFormYearSelectorFrom").children("option:selected").val();
 
-
+				movieArray = isBetweenValue(movieArray, filterType, from, to);
 			}
-			if (filterType == imdbRating)
+			if (filterType == "imdbRating")
 			{
 				let to = $("#filterFormRatingSelectorTo").children("option:selected").val();
 				let from = $("#filterFormRatingSelectorFrom").children("option:selected").val();
 
+				movieArray = isBetweenValue(movieArray, filterType, from, to);
 			}
-			if (filterType == genre_ids)
+			if (filterType == "genre_ids")
 			{
-				let genreId = $("filterFormGenreSelector").children("option:selected").val();
+				let genreId = $("#filterFormGenreSelector").children("option:selected").val();
 				
-				movieArray = sortGenre(result, genreId , "filter");
+				movieArray = sortGenre(movieArray, genreId , "filter");
 			}
 		}
 		return movieArray;
@@ -516,10 +524,6 @@
 
 	function sortFunction(movieArray, sortType, sortMeth)
 	{	
-		console.log(movieArray);
-		console.log(sortType);
-		console.log(sortMeth);
-
 		if (sortType != "None")  
 		{
 			// SORT TYPES
@@ -539,6 +543,21 @@
 				movieArray = appendNoRating(movieArray, sortMeth); //movieArray = removeNoRating(movieArray); 
 		}
 		return movieArray;
+	}
+
+	function isBetweenValue(result, sortType, value1, value2)
+	{
+		let arr = [];
+
+		for(let i = 0; i < result.length; i++) 
+		{
+			if ((value1 <= result[i][sortType]) && (result[i][sortType] <= value2)) //if (value1 <= result && result <= )
+			{
+				console.log("works\n\n\n");
+				arr.push(result[i]);
+			}
+		}
+		return arr;	
 	}
 
 	// This function goes through the multiple apis and then appens all the information into one json object so that other functions can extract data from it 
@@ -632,6 +651,9 @@
 		let arr = [];
 		let arr2 = [];
 
+		console.log(result);
+		console.log(genreID);
+		console.log(type);
 		console.log(arr);
 
 		// iterate through the movie arrays
@@ -656,6 +678,7 @@
 		}
 		if (type == "sort")
 			arr = arr.concat(arr2);
+		console.log(arr);
 		return arr;	
 	}
 
@@ -704,8 +727,6 @@
 		$(elem).removeClass('border-info');
 
 		$(elem).children().css("color", "#888888");
-	};
-
-	
+	};	
 	
 </script>
