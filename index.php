@@ -488,7 +488,7 @@
 			if (sortType == "genre_ids")
 			{
 				// sortMeth is the genre.id in this case
-				console.log(sortGenre(movieArray, sortMeth));
+				movieArray = sortGenre(movieArray, sortMeth);
 
 			}
 
@@ -563,11 +563,11 @@
 	}
 
 	// look for selected genre and put that at the top.
+	// in the case that we want only the selected genre to show, remove the concat
 	function sortGenre(result, genreID)
 	{
 		console.log("\nGENRE SORT\n")
 
-		console.log(genreID);
 		let arr = [];
 		let arr2 = [];
 
@@ -581,34 +581,25 @@
 			for(let j = 0; j < result[i].genre_ids.length; j++) 
 			{
 				console.log(result[i].genre_ids[j]);
+				console.log("ARR1");
+				console.log(arr);
+				console.log(result[i]);
 				if (result[i].genre_ids[j] == genreID)
 				{
-					console.log("is genre");
-					if (!(arr.includes(result[i])))
+					if (!(arr.includes(result[i]))) 
 					{
-						console.log("is - here");
-						console.log(arr);
 						arr.push(result[i]);
 						console.log(arr);
 					}
 				}
-				else 
-				{
-					console.log("not genre");
-					if (!(arr.includes(result[i])))
-					{
-						console.log("not - here");
-						console.log(arr2);
-						arr2.push(result[i]);
-						console.log(arr2);
-					}
-				}
-			}				
-		}
 
-		arr = arr2.concat(arr);
-		console.log("arr");
-		console.log(arr);
+			}
+			if ((!(arr.includes(result[i]))) && (!(arr.includes(result[i]))))
+				arr2.push(result[i]);
+			console.log("ARR2");
+			console.log(arr2);
+		}
+		arr = arr.concat(arr2);
 		return arr;	
 	}
 
