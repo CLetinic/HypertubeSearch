@@ -15,11 +15,11 @@
 		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" 
 		crossorigin="anonymous">
 	</script>
-<!-- 	<script 
+	<script 
 		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" 
 		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" 
 		crossorigin="anonymous">
-	</script> -->
+	</script>
 	<link 
 		rel="stylesheet" 
 		href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
@@ -209,31 +209,36 @@
 			<div id="filterForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Filter</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input" checked="">
+					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input" value="" checked="">
 					<label class="custom-control-label" for="filterFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
 					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input">
 					<label class="custom-control-label" for="filterFormRadio2"> Year </label>
 					<div class="">
-						<select id="Filter_Year_From">
+						<select id="filterFormYearSelectorFrom">
 						</select> 
 						to 
-						<select id="Filter_Year_To">
+						<select id="filterFormYearSelectorTo">
 						</select>
 					</div>
 				</div>
 					<div class="custom-control custom-radio">
 					<input type="radio" id="filterFormRadio3" name="filterFormRadio" class="custom-control-input">
 					<label class="custom-control-label" for="filterFormRadio3"> Rating </label>
-					<select id="filter_rating_options">
-					</select> 
+					<div class="">
+						<select id="filterFormRatingSelectorFrom">
+						</select>
+						to
+						<select id="filterFormRatingSelectorTo">
+						</select>
+					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input">
+					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input" value="genre_ids">
 					<label class="custom-control-label" for="filterFormRadio4"> Genre </label>
-					<div id="sortFormGenre" class="">
-						<select>
+					<div class="">
+						<select id="filterFormGenreSelector">
 							<option class="" value="28" selected>Action</option> <!-- 28 -->
 							<option class="" value="12">Adventure</option> <!-- 12 -->
 							<option class="" value="16">Animation</option> <!-- 16 -->
@@ -262,26 +267,32 @@
 			// Populate the sort/filter drop downs
 			var currentYear = (new Date).getFullYear();
 
-			for (var i = currentYear; i >= 1921; i--) 
+			for (var i = currentYear; i >= 1900; i--) 
 			{	
 				if (i == 0)
 				{
-					$('#Filter_Year_From').append('<option value='+ i +' selected>'+ i +'</option>');
-					$('#Filter_Year_To').append('<option value='+ i +' selected>'+ i +'</option>');
+					$('#filterFormYearSelectorTo').append('<option value='+ i +' selected>'+ i +'</option>');
+					$('#filterFormYearSelectorFrom').append('<option value='+ i +' selected>'+ i +'</option>');
 				}
 				else 
 				{
-					$('#Filter_Year_From').append('<option value='+ i +'>'+ i +'</option>');
-					$('#Filter_Year_To').append('<option value='+ i +'>'+ i +'</option>');
+					$('#filterFormYearSelectorTo').append('<option value='+ i +'>'+ i +'</option>');
+					$('#filterFormYearSelectorFrom').append('<option value='+ i +'>'+ i +'</option>');
 				}
 			}
 
 			for (var i = 10; i >= 0; i--) 
 			{
 				if (i == 10)
-					$('#filter_rating_options').append('<option value='+ i +' selected>'+ i +' / 10</option>');
+				{
+					$('#filterFormRatingSelectorTo').append('<option value='+ i +' selected>'+ i +' / 10</option>');
+					$('#filterFormRatingSelectorFrom').append('<option value='+ i +' selected>'+ i +' / 10</option>');
+				}
 				else
-					$('#filter_rating_options').append('<option value='+ i +'>'+ i +' / 10</option>');
+				{
+					$('filterFormRatingSelectorTo').append('<option value='+ i +'>'+ i +' / 10</option>');
+					$('#filterFormRatingSelectorFrom').append('<option value='+ i +' selected>'+ i +' / 10</option>');
+				}
 			}
 		</script>
 	</div>
@@ -314,13 +325,14 @@
 			/find - The last but still very useful way to find data is with existing external IDs. For example, if you know the IMDB ID of a movie, TV show or person, you can plug that value into this method and we'll return anything that matches. This can be very useful when you have an existing tool and are adding our service to the mix."
 		*/
 
-		const moviedbAPI = "&api_key=4084c07502a720532f5068169281abff";
-		const omdbAPI = "&apikey=1f18a935"
+		const moviedbAPI = "&api_key=4084c07502a720532f5068169281abff";		// https://www.themoviedb.org/documentation/api?language=en-US
+		const omdbAPI = "&apikey=1f18a935"									// http://www.omdbapi.com/
 
 		var moviedbMethod;
 
 		var sort;
 		var sortMethod;
+		var filter;
 
 		//SEARCH OPTIONS
 		// check for a change in sort radios 
@@ -341,6 +353,15 @@
 			sortMethod = $(this).children("option:selected").val();
 		});
 
+		//FILTER OPTIONS
+		$("input[type='radio']").click(function()
+		{	
+			if (this.name == "filterFormRadio") 
+				filter = $("input[name='"+ this.name +"']:checked").val();  //elem.target
+			else 
+				filter = "";
+		});
+
 		// SEARCH
 		$('#searchbar').on('input', function(event) 
 		{
@@ -354,90 +375,81 @@
 
 			// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
 
-			$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&sort_by=release_date.asc&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
-			{
-				var result = sortFunction(rawdata.results, sort, sortMethod);
-
-				console.log(rawdata.results[0].genre_ids[0]);
-
+			$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
+			{		
+				var result = appendMovieData(rawdata.results);
+				result = sortFunction(result, sort, sortMethod);	
 
 				$('#result').html('');
-				result.forEach(function(movie) 
-				{
-					var moviedbYear = movie.release_date.substring(0, 4);
+				result.forEach(function(moviedata) 
+				{				
+					console.log("OMDB")
+					console.log(moviedata);
+					var content;
+					var imdbRating;
+					var imdbURL;
 
-					// take the movie id and return an object that stores all the meta data for that movie		
-					jQuery.ajaxSetup({async:false});
-					$.get("https://www.omdbapi.com/?t="+ movie.title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
-					{
-						if(moviedata.Response)
-						{
-							var content;
-							var imdbRating;
-							var imdbURL;
+					// check if there is a rating given
+					var rating;
+					imdbRating = moviedata.imdbRating;
+					if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null && isNaN(imdbRating) && isNaN(movie.imdbID)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
+						rating = 'N/A';
+					else
+						rating = imdbRating + "/10";	
 
-							// check if there is a rating given
-							var rating;
-							imdbRating = moviedata.imdbRating;
-							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null && isNaN(imdbRating) && isNaN(movie.imdbID)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
-								rating = 'N/A';
-							else
-								rating = imdbRating + "/10";	
+					if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || isNaN(moviedata.imdbID) || rating === 'N/A')
+						imdbURL = "<p> </p>";
+					else
+						imdbURL = "<a href='https://www.imdb.com/title/"+ moviedata.imdbID +"/'>Go to IMDb Page</a>";
+						//imdbURL = "https://www.imdb.com/title/"+ moviedata.imdbID +"/"
 
-							if (movie.imdbID === 'N/A' || movie.imdbID === 'undefined' || movie.imdbID === undefined || movie.imdbID === 'null' || movie.imdbID === null || isNaN(movie.imdbID) || rating === 'N/A')
-								imdbURL = "<p> </p>";
-							else
-								imdbURL = "<a href='https://www.imdb.com/title/"+ movie.imdbID +"/'>Go to IMDb Page</a>";
-								//imdbURL = "https://www.imdb.com/title/"+ movie.imdbID +"/"				
 
-							// check if there is a movie poster avaliable
-							var srcImage;
+					// check if there is a movie poster avaliable
+					var srcImage;
+					if (!(moviedata.poster_path === null))
+						srcImage = "https://image.tmdb.org/t/p/w342" + moviedata.poster_path;
+					else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
+						srcImage = moviedata.Poster;
+					else 
+						srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";	
 
-							if (!(movie.poster_path === null))
-								srcImage = "https://image.tmdb.org/t/p/w342" + movie.poster_path;
-							else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
-								srcImage = moviedata.Poster;
-							else 
-								srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";	
+					// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
+					var titleSize;
+					if(moviedata.title.length <= 65) 
+						titleSize = "font-size: 1.2rem";
+					else
+						 titleSize = "font-size: 100%";
+					
+					var original_title;
+					if (moviedata.title != moviedata.original_title)
+						original_title = `<h6>(`+ moviedata.original_title +`)</h6>`;
+					else
+						original_title = ""
+					
 
-							// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
-							var titleSize;
-							if(movie.title.length <= 65) 
-								titleSize = "font-size: 1.2rem";
-							else
-								 titleSize = "font-size: 100%";
+					// this is creating a div with the content inside of it
+					content = 
+					`<div class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + moviedata.imdbID + `')">
+						<div class="card-header">
+							<h5 class="card-title" style="`+ titleSize +`">`+ moviedata.title +`</h5>
+							`+ original_title +`
+						</div>
+						<div class="card-body">
+							<i class="far fa-eye" style="float: right; font-size: large;"></i>
+							<br>
+							<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
+							<br>
+							<p text-muted>Year Released: ` + moviedata.Year +`</p>
+						</div>
+						<div class="card-footer">
+							<p><i class="fas fa-star"></i> `+ rating +`</p>
+							<br>
+							`+ imdbURL +`
+						</div>
+					</div>`;
+				
+					$('#result').append(content).hide().fadeIn(); 
 							
-							var original_title;
-							if (movie.title != movie.original_title)
-								original_title = `<h6>(`+ movie.original_title +`)</h6>`;
-							else
-								original_title = ""
-							
-
-							// this is creating a div with the content inside of it
-							content = 
-							`<div class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + movie.imdbID + `')">
-								<div class="card-header">
-									<h5 class="card-title" style="`+ titleSize +`">`+ movie.title +`</h5>
-									`+ original_title +`
-								</div>
-								<div class="card-body">
-									<i class="far fa-eye" style="float: right; font-size: large;"></i>
-									<br>
-									<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
-									<br>
-									<p text-muted>Year Released: ` + moviedbYear +`</p>
-								</div>
-								<div class="card-footer">
-									<p><i class="fas fa-star"></i> `+ rating +`</p>
-									<br>
-									`+ imdbURL +`
-								</div>
-							</div>`;
-						
-							$('#result').append(content).hide().fadeIn(); 
-						}
-					});
 				});
 			});
 		});		
@@ -472,6 +484,36 @@
 		}
 	});
 
+	function filterFunction(movieArray, filterType)
+	{
+		console.log(movieArray);
+		console.log(filterType);
+
+		if (filterType != "None")
+		{
+			if (filterType == release_date)
+			{
+				let to = $("#filterFormYearSelectorTo").children("option:selected").val();
+				let from = $("#filterFormYearSelectorFrom").children("option:selected").val();
+
+
+			}
+			if (filterType == imdbRating)
+			{
+				let to = $("#filterFormRatingSelectorTo").children("option:selected").val();
+				let from = $("#filterFormRatingSelectorFrom").children("option:selected").val();
+
+			}
+			if (filterType == genre_ids)
+			{
+				let genreId = $("filterFormGenreSelector").children("option:selected").val();
+				
+				movieArray = sortGenre(result, genreId , "filter");
+			}
+		}
+		return movieArray;
+	}
+
 	function sortFunction(movieArray, sortType, sortMeth)
 	{	
 		console.log(movieArray);
@@ -480,45 +522,64 @@
 
 		if (sortType != "None")  
 		{
-			if (sortType == "imdbRating")
-			{				
-				var newResult = getRating(movieArray);
-				movieArray = newResult;
-			}
+			// SORT TYPES
+			// if (sortType == "imdbRating")
+			// 	movieArray = getRating(movieArray);
 			if (sortType == "genre_ids")
-			{
-				// sortMeth is the genre.id in this case
-				movieArray = sortGenre(movieArray, sortMeth);
+				movieArray = sortGenre(movieArray, sortMeth, "sort"); // sortMeth is the genre.id in this case
 
-			}
-
+			// SORT METHODS
 			if (sortMeth == "asc")
 				movieArray = sortAscending(movieArray, sortType);
 			else if (sortMeth == "desc")
 				movieArray = sortDescending(movieArray, sortType);
 
+			// this is used to remove or append movies that don't have ratings
 			if (sortType == "imdbRating")
 				movieArray = appendNoRating(movieArray, sortMeth); //movieArray = removeNoRating(movieArray); 
 		}
 		return movieArray;
 	}
 
-	//RATING
-	// fetch the rating
-	function getRating(result)
+	// This function goes through the multiple apis and then appens all the information into one json object so that other functions can extract data from it 
+	// and prevents the need to make multiple calls in different functions.
+	function appendMovieData(result)
 	{
 		for(let i = 0; i < result.length; i++) 
 		{
 			console.log(result[i].title);
 			let moviedbYear = result[i].release_date.substring(0, 4);
 			jQuery.ajaxSetup({async:false});
-			$.get("https://www.omdbapi.com/?t="+ result[i].title +"&plot=full&type=movie&y="+ moviedbYear +"&apikey=1f18a935",function(moviedata)
+			// here we are getting the movies's IMDB ID so we can get more accurate results from OMDB
+			$.get("https://api.themoviedb.org/3/movie/"+ result[i].id +"/external_ids?api_key=4084c07502a720532f5068169281abff",function(movie)
 			{
-				if(moviedata.Response)
-				{								
-					result[i]["imdbRating"] = Number(moviedata.imdbRating);
-					result[i]["imdbID"] = moviedata.imdbID;
-				}
+				console.log(movie);
+				result[i]["imdbID"] = movie.imdb_id;
+				// here we access OMDB and append some relevant fields we might need
+				$.get("https://www.omdbapi.com/?i="+ result[i]['imdbID'] +"&apikey=1f18a935",function(moviedata)
+				{
+					if(moviedata.Response)
+					{
+						result[i]["imdbRating"] = Number(moviedata.imdbRating);
+						result[i]["imdbURL"] = "https://www.imdb.com/title/"+ result[i]["imdbID"] +"/";
+						result[i]["Year"] = Number(result[i].release_date.substring(0, 4));
+						result[i]["Actors"] = moviedata.Actors; // don't actually need this since this next query gets this info, but makes it easier to access
+						result[i]["Director"] = moviedata.Director; // don't actually need this since this next query gets this info, but makes it easier to access
+						result[i]["Writer"] = moviedata.Writer; // don't actually need this since this next query gets this info, but makes it easier to access
+						result[i]["Plot"] = moviedata.Plot;
+						result[i]["Poster"] = moviedata.Poster;
+						result[i]["Production"] = moviedata.Production;
+						result[i]["Runtime"] = moviedata.Runtime;
+						result[i]["Rated"] = moviedata.Rated; // age restriction
+						result[i]["Website"] = moviedata.Website;
+
+						// var test = $.extend({}, result[i], moviedata);
+					}
+					$.get("https://api.themoviedb.org/3/movie/"+ result[i].id +"/credits?api_key=4084c07502a720532f5068169281abff",function(moviecredit)
+					{
+						result[i] = $.extend({}, result[i], moviecredit);
+					});
+				});
 			});					
 		}
 		return result;	
@@ -564,7 +625,7 @@
 
 	// look for selected genre and put that at the top.
 	// in the case that we want only the selected genre to show, remove the concat
-	function sortGenre(result, genreID)
+	function sortGenre(result, genreID, type)
 	{
 		console.log("\nGENRE SORT\n")
 
@@ -580,10 +641,6 @@
 			// iterate through the genre array
 			for(let j = 0; j < result[i].genre_ids.length; j++) 
 			{
-				console.log(result[i].genre_ids[j]);
-				console.log("ARR1");
-				console.log(arr);
-				console.log(result[i]);
 				if (result[i].genre_ids[j] == genreID)
 				{
 					if (!(arr.includes(result[i]))) 
@@ -596,10 +653,9 @@
 			}
 			if ((!(arr.includes(result[i]))) && (!(arr.includes(result[i]))))
 				arr2.push(result[i]);
-			console.log("ARR2");
-			console.log(arr2);
 		}
-		arr = arr.concat(arr2);
+		if (type == "sort")
+			arr = arr.concat(arr2);
 		return arr;	
 	}
 
