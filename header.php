@@ -25,8 +25,12 @@
 		integrity="sha384-e4EhcNyUDF/kj6ZoPkLnURgmd8KW1B4z9GHYKb7eTG3w3uN8di6EBsN2wrEYr8Gc" 
 		crossorigin="anonymous">
 
-	<script type="text/javascript" src="./sort.js"></script>
-	<script type="text/javascript" src="./filter.js"></script>
+	<script type="text/javascript" src="getData.js"></script>
+
+<!-- 
+
+	<script type="text/javascript" src="sort.js"></script>
+	<script type="text/javascript" src="filter.js"></script> -->
 
 	<!-- AESTHETIC -->
 	<style type="text/css">

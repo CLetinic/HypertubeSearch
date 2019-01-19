@@ -3,9 +3,9 @@
 <head>
 <title></title>
 	<?php
-		require_once("./header.php");
+		require_once("header.php");
 	?>
-	
+<script type="text/javascript" src="getData.js"></script>
 </head>
 <body>
 	<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
@@ -227,48 +227,22 @@
 		$("input[type='radio']").click(function()
 		{	
 			if (this.name == "sortFormRadio") //SORT OPTIONS 
-			{
 				sort = $("input[name='"+ this.name +"']:checked").val();  //elem.target
-				sortID = $(this).parent().find( "select" ).attr('id');
-
-				
-
-				// sortMethod = $( this ).parent().find( "select" ).children("option:selected").val();
-			}
 			else if (this.name == "filterFormRadio") //FILTER OPTIONS
 				filter = $("input[name='"+ this.name +"']:checked").val();
-			// else
-			// {
-			// 	sort = "";
-			// 	filter = "";
-			// }
 		});
-		
-		// check for a change in selector 
-		// $("select.sort").change(function()
-		// {
-		// 	sortMethod = $(this).children("option:selected").val();
-		// });
 
 		// SEARCH
 		//$('#searchbar').on('input', function(event) 
 		$('.fieldinput').change(function(event) 
 		{
-			console.log("this\n\n");
-			console.log($(this));
-			if (this.name == "sortFormRadio" || this.name == "filterFormRadio")
-				sortID = $(this).parent().find( "select" ).attr('id');
-			console.log(sortID);
 			$('#result').fadeOut();
-
-			moviedbMethod = "search";
 
 			// to get search data - this fetches an array of movies with matches to the search
 			// themoviedb has a much more powerful search functionality 
 			// Whereas omdb has a better resources from on IMDB
 
 			// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
-			console.log($('#searchbar').val());
 			$.get(`https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
 			{	
 				console.log("\n\n\n\n\n\n");
@@ -281,9 +255,9 @@
 				console.log("\n\n\n\n\n\n");
 
 				var result; 
-				result = appendMovieData(rawdata.results);
+				result = getMovieData(rawdata.results, "search");
 				result = filterFunction(result, filter);
-				result = sortFunction(result, sort, sortID);	
+				result = sortFunction(result, sort);	
 
 				$('#result').html('');
 				result.forEach(function(moviedata) 
@@ -391,6 +365,7 @@
 
 	function filterFunction(movieArray, filterType)
 	{
+		console.log("\n\n filter\n\n")
 		if (filterType != "None")
 		{
 			if (filterType == "Year")
@@ -400,14 +375,14 @@
 
 				movieArray = isBetweenValue(movieArray, filterType, from, to);
 			}
-			if (filterType == "imdbRating")
+			else if (filterType == "imdbRating")
 			{
 				let to = $("#filterFormRatingSelectorTo").children("option:selected").val();
 				let from = $("#filterFormRatingSelectorFrom").children("option:selected").val();
 
 				movieArray = isBetweenValue(movieArray, filterType, from, to);
 			}
-			if (filterType == "genre_ids")
+			else if (filterType == "genre_ids")
 			{
 				let genreId = $("#filterFormGenreSelector").children("option:selected").val();
 				
@@ -417,11 +392,16 @@
 		return movieArray;
 	}
 
-	function sortFunction(movieArray, sortType, sortID)
+	function sortFunction(movieArray, sortType)
 	{	
+		console.log("\n\n SORT \n\n")
 		if (sortType != "None")  
 		{
+			let sortID = getSortID(sortType);
 			let sortMeth = $("#"+ sortID +"").children("option:selected").val();
+			console.log(sortType);
+			console.log(sortMeth);
+			console.log(sortID);
 
 			// SORT TYPES
 			if (sortType == "genre_ids")
@@ -440,73 +420,52 @@
 		return movieArray;
 	}
 
+	function getSortID(sortType)
+	{
+		if (sortType == "title")
+			return "sortFormNameSelector";
+		if (sortType == "Year")
+			return "sortFormYearSelector";
+		if (sortType == "imdbRating")
+			return "sortFormRatingSelector";
+		if (sortType == "genre_ids")
+			return "sortFormGenreSelector";
+	}
+
 	function isBetweenValue(result, sortType, value1, value2)
 	{
 		let arr = [];
-		let small;
-		let big;
+		let small = parseFloat(value1);
+		let big = parseFloat(value2);
 
 		// this is just incase someone tries to invert the values
-		if (value1 > value2)
+		if (small > big)
 		{
-			big = value1;
-			small = value2;
-		}
-		else if (value1 < value2)
-		{
-			big = value2;
-			small = value1;
+			console.log("value2 bigger");
+			[small, big] = [big, small]
 		}
 
 		for(let i = 0; i < result.length; i++) 
 		{
-			if (((small <= result[i][sortType]) && (result[i][sortType] <= big)) || ((value1 == value2) && (result[i][sortType] == value2)))
+			if (((small <= Number(result[i][sortType])) && (Number(result[i][sortType]) <= big)) || ((value1 == value2) && (result[i][sortType] == value2)))
 				arr.push(result[i]);
 		}
+
 		return arr;	
 	}
 
-	// This function goes through the multiple apis and then appens all the information into one json object so that other functions can extract data from it 
-	// and prevents the need to make multiple calls in different functions.
-	function appendMovieData(result)
+	function getMovieData(result, pageType)
 	{
 		for(let i = 0; i < result.length; i++) 
 		{
-			console.log(result[i].title);
-			let moviedbYear = result[i].release_date.substring(0, 4);
+			// get the IMDB ID
 			jQuery.ajaxSetup({async:false});
-			// here we are getting the movies's IMDB ID so we can get more accurate results from OMDB
 			$.get("https://api.themoviedb.org/3/movie/"+ result[i].id +"/external_ids?api_key=4084c07502a720532f5068169281abff",function(movie)
 			{
-				console.log(movie);
-				result[i]["imdbID"] = movie.imdb_id;
-				// here we access OMDB and append some relevant fields we might need
-				$.get("https://www.omdbapi.com/?i="+ result[i]['imdbID'] +"&apikey=1f18a935",function(moviedata)
-				{
-					if(moviedata.Response)
-					{
-						result[i]["imdbRating"] = Number(moviedata.imdbRating);
-						result[i]["imdbURL"] = "https://www.imdb.com/title/"+ result[i]["imdbID"] +"/";
-						result[i]["Year"] = Number(result[i].release_date.substring(0, 4));
-						//result[i]["Actors"] = moviedata.Actors; // don't actually need this since this next query gets this info, but makes it easier to access
-						//result[i]["Director"] = moviedata.Director; // don't actually need this since this next query gets this info, but makes it easier to access
-						//result[i]["Writer"] = moviedata.Writer; // don't actually need this since this next query gets this info, but makes it easier to access
-						result[i]["Plot"] = moviedata.Plot;
-						result[i]["Poster"] = moviedata.Poster;
-						//result[i]["Production"] = moviedata.Production;
-						//result[i]["Runtime"] = moviedata.Runtime;
-						//result[i]["Rated"] = moviedata.Rated; // age restriction
-						//result[i]["Website"] = moviedata.Website;
-						result[i]["tmdbURL"] = "https://www.themoviedb.org/movie/"+ result[i].id +""; 
-
-						// var test = $.extend({}, result[i], moviedata);
-					}
-					// $.get("https://api.themoviedb.org/3/movie/"+ result[i].id +"/credits?api_key=4084c07502a720532f5068169281abff",function(moviecredit)
-					// {
-					// 	result[i] = $.extend({}, result[i], moviecredit);
-					// });
-				});
-			});					
+				appendMovieData(result[i], movie.imdb_id, "search");
+				console.log("\n\n\nget ID:" + movie.imdb_id);
+				console.log(result[i]);
+			});			
 		}
 		return result;	
 	}
@@ -638,7 +597,7 @@
 
 	function loadInfo(id)
 	{
-		location.href += 'movieInfoPage.php/?id='+ id +'';
+		location.href += 'movieInfoPage.php?id='+ id +'';
 	};
 	
 </script>
