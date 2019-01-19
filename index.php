@@ -2,123 +2,10 @@
 <html>
 <head>
 <title></title>
-	<script 
-		src="https://unpkg.com/popper.js">
-	</script>
-		<script
-		src="https://code.jquery.com/jquery-3.3.1.js"
-		integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-		crossorigin="anonymous">
-	</script>
-	<script 
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" 
-		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" 
-		crossorigin="anonymous">
-	</script>
-	<script 
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" 
-		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" 
-		crossorigin="anonymous">
-	</script>
-	<link 
-		rel="stylesheet" 
-		href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
-		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" 
-		crossorigin="anonymous">
-	<link 
-		rel="stylesheet" 
-		href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
-		integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" 
-		crossorigin="anonymous">
-	<link 
-		href="https://stackpath.bootstrapcdn.com/bootswatch/4.2.1/cyborg/bootstrap.min.css" 
-		rel="stylesheet" 
-		integrity="sha384-e4EhcNyUDF/kj6ZoPkLnURgmd8KW1B4z9GHYKb7eTG3w3uN8di6EBsN2wrEYr8Gc" 
-		crossorigin="anonymous">
-	<style type="text/css">
-		/* AESTHETIC */
-		.card
-		{
-			margin: auto;
-			margin-top: 10%;
-			width: 85%;
-			outline: none;
-			text-align: center;
-		}
-		.form
-		{
-			width: 75%;
-			background: none;
-		}
-		#searchForm
-		{
-			position: relative;
-			justify-content: center;
-		}
-		input
-		{
-			text-align: center;
-			color: #888888;
-			outline: none;
-			display: block;
-			border: none;
-			background: transparent;
-			border-bottom: 1px solid #888888;
-		}
-
-		input:focus
-		{
-			color: white;
-			outline: none;
-			border-bottom: 2px solid #9933CC;
-		}
-		button:focus
-		{
-			outline: none;
-		}
-		#searchText
-		{
-			color: #888888;
-			border: none;
-			outline: none;
-			background: none;
-		}
-		#searchText:hover
-		{
-			color: white;
-		}
-		#searchText:focus
-		{
-			color: white;
-		}
-		.col-sm-4
-		{
-			padding-left: 0px;
-			padding-right: 0px;
-		}
-		.card-body
-		{
-			padding: 0.5rem 1.25rem 1.25rem 1.25rem /*top right bottom left*/
-		}
-		.card-header
-		{
-			width: 100%;
-			height: 100px;
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-			text-align: center;
-		}
-		.card-footer
-		{
-			width: 100%;
-		}
-		h5
-		{
-			text-align: center;
-			vertical-align: middle;
-		}
-	</style>
+	<?php
+		require_once("./header.php");
+	?>
+	
 </head>
 <body>
 	<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
@@ -136,31 +23,31 @@
 				<button id="searchText" type="submit"><i class="fa fa-search"></i></button> 
 			</form> -->
 			<div id="searchForm" class="form-inline my-2 my-lg-0">
-				<input id="searchbar" class="form" type="search" placeholder="Search" style="border-radius: 0%;">
+				<input id="searchbar" class="form fieldinput" type="search" placeholder="Search" style="border-radius: 0%;">
 			</div>
 			<br>
 			<!-- SORT  -->
 			<div id="sortForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Sort</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input sort" value="" checked="">
+					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input sort fieldinput" value="" checked="">
 					<label class="custom-control-label" for="sortFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input sort" value="title"> <!-- value="&sort_by=original_title." -->
+					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input sort fieldinput" value="title"> <!-- value="&sort_by=original_title." -->
 					<label class="custom-control-label" for="sortFormRadio2"> Name </label>
 					<div id="sortFormName" class="">
-						<select id="sortFormNameSelector">
+						<select id="sortFormNameSelector" class="fieldinput">
 							<option class="" value="asc" selected>A - Z</option> 
 							<option class="" value="desc">Z - A</option> <!-- Ascending -->
 						</select>						
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input sort" value="Year">
+					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input sort fieldinput" value="Year">
 					<!-- value="&sort_by=release_date." -->
 					<label class="custom-control-label" for="sortFormRadio3"> Year </label>
-					<div id="sortFormYear" class="">
+					<div id="sortFormYear" class="fieldinput">
 						<select id="sortFormYearSelector">
 							<option class="" value="asc" >Oldest - Newest</option> <!-- Ascending -->
 							<option class="" value="desc" selected>Newest - Oldest</option> <!-- Descending release_date.desc primary_release_date.desc--> 
@@ -168,20 +55,20 @@
 					</div>
 				</div>
 					<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input sort" value="imdbRating">
+					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input sort fieldinput" value="imdbRating">
 					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
 					<div id="sortFormRating" class="">
-						<select id="sortFormRatingSelector">
+						<select id="sortFormRatingSelector" class="fieldinput">
 							<option class="" value="desc" selected>Highest - Lowest</option> <!-- Descending --> <!-- This I will have to make my own -->
 							<option class="" value="asc">Lowest - Highest</option> <!-- Ascending -->
 						</select>						
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input sort" value="genre_ids">
+					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input sort fieldinput" value="genre_ids">
 					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 					<div id="sortFormGenre" class="">
-						<select id="sortFormGenreSelector">
+						<select id="sortFormGenreSelector" class="fieldinput">
 							<option class="" value="28" selected>Action</option> <!-- 28 -->
 							<option class="" value="12">Adventure</option> <!-- 12 -->
 							<option class="" value="16">Animation</option> <!-- 16 -->
@@ -209,36 +96,36 @@
 			<div id="filterForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Filter</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input filter" value="" checked="">
+					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input filter fieldinput" value="" checked="">
 					<label class="custom-control-label" for="filterFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input filter" value="Year">
+					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input filter fieldinput" value="Year">
 					<label class="custom-control-label" for="filterFormRadio2"> Year </label>
 					<div class="">
-						<select id="filterFormYearSelectorFrom">
+						<select id="filterFormYearSelectorFrom" class="fieldinput">
 						</select> 
 						to 
-						<select id="filterFormYearSelectorTo">
+						<select id="filterFormYearSelectorTo" class="fieldinput">
 						</select>
 					</div>
 				</div>
 					<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio3" name="filterFormRadio" class="custom-control-input filter" value="imdbRating">
+					<input type="radio" id="filterFormRadio3" name="filterFormRadio" class="custom-control-input filter fieldinput" value="imdbRating">
 					<label class="custom-control-label" for="filterFormRadio3"> Rating </label>
 					<div class="">
-						<select id="filterFormRatingSelectorFrom">
+						<select id="filterFormRatingSelectorFrom" class="fieldinput">
 						</select>
 						to
-						<select id="filterFormRatingSelectorTo">
+						<select id="filterFormRatingSelectorTo" class="fieldinput">
 						</select>
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input filter" value="genre_ids">
+					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input filter fieldinput" value="genre_ids">
 					<label class="custom-control-label" for="filterFormRadio4"> Genre </label>
 					<div class="">
-						<select id="filterFormGenreSelector">
+						<select id="filterFormGenreSelector" class="fieldinput">
 							<option class="" value="28" selected>Action</option> <!-- 28 -->
 							<option class="" value="12">Adventure</option> <!-- 12 -->
 							<option class="" value="16">Animation</option> <!-- 16 -->
@@ -331,7 +218,8 @@
 		var moviedbMethod;
 
 		var sort;
-		var sortMethod;
+		var sortID;
+		// var sortMethod;
 		var filter;
 
 		//SEARCH OPTIONS
@@ -341,26 +229,36 @@
 			if (this.name == "sortFormRadio") //SORT OPTIONS 
 			{
 				sort = $("input[name='"+ this.name +"']:checked").val();  //elem.target
-				sortMethod = $( this ).parent().find( "select" ).children("option:selected").val();
+				sortID = $(this).parent().find( "select" ).attr('id');
+
+				
+
+				// sortMethod = $( this ).parent().find( "select" ).children("option:selected").val();
 			}
 			else if (this.name == "filterFormRadio") //FILTER OPTIONS
 				filter = $("input[name='"+ this.name +"']:checked").val();
-			else
-			{
-				sort = "";
-				filter = "";
-			}
+			// else
+			// {
+			// 	sort = "";
+			// 	filter = "";
+			// }
 		});
 		
 		// check for a change in selector 
-		$("select.sort").change(function()
-		{
-			sortMethod = $(this).children("option:selected").val();
-		});
+		// $("select.sort").change(function()
+		// {
+		// 	sortMethod = $(this).children("option:selected").val();
+		// });
 
 		// SEARCH
-		$('#searchbar').on('input', function(event) 
+		//$('#searchbar').on('input', function(event) 
+		$('.fieldinput').change(function(event) 
 		{
+			console.log("this\n\n");
+			console.log($(this));
+			if (this.name == "sortFormRadio" || this.name == "filterFormRadio")
+				sortID = $(this).parent().find( "select" ).attr('id');
+			console.log(sortID);
 			$('#result').fadeOut();
 
 			moviedbMethod = "search";
@@ -370,20 +268,22 @@
 			// Whereas omdb has a better resources from on IMDB
 
 			// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
-
-			$.get(`https://api.themoviedb.org/3/search/movie?query=${event.target.value}&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
+			console.log($('#searchbar').val());
+			$.get(`https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
 			{	
+				console.log("\n\n\n\n\n\n");
 				console.log("filter");
 				console.log(filter);
 				console.log("sort");
 				console.log(sort);
-				console.log("sortMethod");
-				console.log(sortMethod);
+				// console.log("sortMethod");
+				// console.log(sortMethod);
+				console.log("\n\n\n\n\n\n");
 
 				var result; 
 				result = appendMovieData(rawdata.results);
 				result = filterFunction(result, filter);
-				result = sortFunction(result, sort, sortMethod);	
+				result = sortFunction(result, sort, sortID);	
 
 				$('#result').html('');
 				result.forEach(function(moviedata) 
@@ -394,6 +294,7 @@
 					var imdbRating;
 					var imdbURL;
 
+					//ERROR CHECKING - so as not to get funny values displaying
 					// check if there is a rating given
 					var rating;
 					imdbRating = moviedata.imdbRating;
@@ -402,13 +303,16 @@
 					else
 						rating = imdbRating + "/10";	
 
+					// check if there is an IMDB ID to have a URL
 					if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || rating === 'N/A')
 						imdbURL = "<p> </p>";
 					else
 						imdbURL = "<a href='"+ moviedata.imdbURL +"'>Go to IMDb Page</a>";
-					console.log(moviedata.imdbURL);
-					console.log(imdbURL);
 
+					//check if there is a year provided
+					var yearRelease = moviedata.Year;
+					if (yearRelease === 'N/A' || yearRelease === 'undefined' || yearRelease === undefined || yearRelease === 'null' || yearRelease === null || isNaN(yearRelease) || yearRelease <= 0) 
+						yearRelease = 'N/A';
 
 					// check if there is a movie poster avaliable
 					var srcImage;
@@ -445,7 +349,7 @@
 							<br>
 							<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
 							<br>
-							<p text-muted>Year Released: ` + moviedata.Year +`</p>
+							<p text-muted>Year Released: ` + yearRelease +`</p>
 						</div>
 						<div class="card-footer">
 							<p><i class="fas fa-star"></i> `+ rating +`</p>
@@ -459,11 +363,6 @@
 				});
 			});
 		});		
-
-		function loadInfo(id)
-		{
-			location.href += 'movieInfoPage.php/?id='+ id +'';
-		};
 
 		// removes any duplicate movies just in case
 		function remove_Dup(arr) 
@@ -492,10 +391,6 @@
 
 	function filterFunction(movieArray, filterType)
 	{
-		console.log("\n\n FILTER \n\n")
-		console.log("before");
-		console.log(movieArray);
-
 		if (filterType != "None")
 		{
 			if (filterType == "Year")
@@ -522,13 +417,13 @@
 		return movieArray;
 	}
 
-	function sortFunction(movieArray, sortType, sortMeth)
+	function sortFunction(movieArray, sortType, sortID)
 	{	
 		if (sortType != "None")  
 		{
+			let sortMeth = $("#"+ sortID +"").children("option:selected").val();
+
 			// SORT TYPES
-			// if (sortType == "imdbRating")
-			// 	movieArray = getRating(movieArray);
 			if (sortType == "genre_ids")
 				movieArray = sortGenre(movieArray, sortMeth, "sort"); // sortMeth is the genre.id in this case
 
@@ -548,14 +443,25 @@
 	function isBetweenValue(result, sortType, value1, value2)
 	{
 		let arr = [];
+		let small;
+		let big;
+
+		// this is just incase someone tries to invert the values
+		if (value1 > value2)
+		{
+			big = value1;
+			small = value2;
+		}
+		else if (value1 < value2)
+		{
+			big = value2;
+			small = value1;
+		}
 
 		for(let i = 0; i < result.length; i++) 
 		{
-			if ((value1 <= result[i][sortType]) && (result[i][sortType] <= value2)) //if (value1 <= result && result <= )
-			{
-				console.log("works\n\n\n");
+			if (((small <= result[i][sortType]) && (result[i][sortType] <= big)) || ((value1 == value2) && (result[i][sortType] == value2)))
 				arr.push(result[i]);
-			}
 		}
 		return arr;	
 	}
@@ -582,22 +488,23 @@
 						result[i]["imdbRating"] = Number(moviedata.imdbRating);
 						result[i]["imdbURL"] = "https://www.imdb.com/title/"+ result[i]["imdbID"] +"/";
 						result[i]["Year"] = Number(result[i].release_date.substring(0, 4));
-						result[i]["Actors"] = moviedata.Actors; // don't actually need this since this next query gets this info, but makes it easier to access
-						result[i]["Director"] = moviedata.Director; // don't actually need this since this next query gets this info, but makes it easier to access
-						result[i]["Writer"] = moviedata.Writer; // don't actually need this since this next query gets this info, but makes it easier to access
+						//result[i]["Actors"] = moviedata.Actors; // don't actually need this since this next query gets this info, but makes it easier to access
+						//result[i]["Director"] = moviedata.Director; // don't actually need this since this next query gets this info, but makes it easier to access
+						//result[i]["Writer"] = moviedata.Writer; // don't actually need this since this next query gets this info, but makes it easier to access
 						result[i]["Plot"] = moviedata.Plot;
 						result[i]["Poster"] = moviedata.Poster;
-						result[i]["Production"] = moviedata.Production;
-						result[i]["Runtime"] = moviedata.Runtime;
-						result[i]["Rated"] = moviedata.Rated; // age restriction
-						result[i]["Website"] = moviedata.Website;
+						//result[i]["Production"] = moviedata.Production;
+						//result[i]["Runtime"] = moviedata.Runtime;
+						//result[i]["Rated"] = moviedata.Rated; // age restriction
+						//result[i]["Website"] = moviedata.Website;
+						result[i]["tmdbURL"] = "https://www.themoviedb.org/movie/"+ result[i].id +""; 
 
 						// var test = $.extend({}, result[i], moviedata);
 					}
-					$.get("https://api.themoviedb.org/3/movie/"+ result[i].id +"/credits?api_key=4084c07502a720532f5068169281abff",function(moviecredit)
-					{
-						result[i] = $.extend({}, result[i], moviecredit);
-					});
+					// $.get("https://api.themoviedb.org/3/movie/"+ result[i].id +"/credits?api_key=4084c07502a720532f5068169281abff",function(moviecredit)
+					// {
+					// 	result[i] = $.extend({}, result[i], moviecredit);
+					// });
 				});
 			});					
 		}
@@ -727,6 +634,11 @@
 		$(elem).removeClass('border-info');
 
 		$(elem).children().css("color", "#888888");
-	};	
+	};
+
+	function loadInfo(id)
+	{
+		location.href += 'movieInfoPage.php/?id='+ id +'';
+	};
 	
 </script>
