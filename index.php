@@ -313,13 +313,13 @@
 
 					// this is creating a div with the content inside of it
 					content = 
-					`<div class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` + moviedata.imdbID + `')">
+					`<div id="`+ moviedata.imdbID +`"class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('`+ moviedata.imdbID +`')">
 						<div class="card-header">
 							<h5 class="card-title" style="`+ titleSize +`">`+ moviedata.title +`</h5>
 							`+ original_title +`
 						</div>
 						<div class="card-body">
-							<i class="far fa-eye" style="float: right; font-size: large;"></i>
+							<i class="far fa-eye" style="float: right; font-size: large; display:none;"></i>
 							<br>
 							<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
 							<br>
