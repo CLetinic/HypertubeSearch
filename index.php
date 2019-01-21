@@ -245,6 +245,7 @@
 			// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
 			$.get(`https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
 			{	
+
 				console.log("\n\n\n\n\n\n");
 				console.log("filter");
 				console.log(filter);
@@ -295,7 +296,7 @@
 					else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
 						srcImage = moviedata.Poster;
 					else 
-						srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";	
+						srcImage = "http://i67.tinypic.com/10fc1lg.jpg";	
 
 					// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
 					var titleSize;
@@ -304,11 +305,11 @@
 					else
 						 titleSize = "font-size: 100%";
 					
-					var original_title;
+					var originalTitle;
 					if (moviedata.title != moviedata.original_title)
-						original_title = `<h6>(`+ moviedata.original_title +`)</h6>`;
+						originalTitle = `<h6>(`+ moviedata.original_title +`)</h6>`;
 					else
-						original_title = ""
+						originalTitle = ""
 					
 
 					// this is creating a div with the content inside of it
@@ -316,7 +317,7 @@
 					`<div id="`+ moviedata.imdbID +`"class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('`+ moviedata.imdbID +`')">
 						<div class="card-header">
 							<h5 class="card-title" style="`+ titleSize +`">`+ moviedata.title +`</h5>
-							`+ original_title +`
+							`+ originalTitle +`
 						</div>
 						<div class="card-body">
 							<i class="far fa-eye" style="float: right; font-size: large; display:none;"></i>
