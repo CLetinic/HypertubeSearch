@@ -11,6 +11,37 @@
 			width: 1px;
 			background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgb(139, 139, 139) 50%, rgba(0, 0, 0, 0) 100%);
 		}
+		.credit_table
+		{
+			width: 100%;
+			overflow-x: scroll;
+		}
+		.cell_name
+		{
+			height: 45px;
+			padding-bottom: 10px;
+		}
+		.cell_image
+		{
+			height: 90px;
+		}
+		.cell_role
+		{
+			height: 60px;
+			font-size: smaller;
+		}
+		td:nth-child(even) 
+		{
+			background: #222222;
+		}
+		td:nth-child(odd)
+		{
+			background: #282828;
+		}
+		td
+		{
+			padding:0.25%;
+		}
 	</style>
 </head>
 <body>
@@ -119,14 +150,18 @@
 								</div>
 							</div>
 							<div class="row">
-							<p><b>Cast:</b><p>
-								<table>
-									<trstyle="width:100%; overflow-x: scroll;">`+ cast +`</tr>
-								</table>
-							<p><b>Crew:<b><p>
-								<table>
-									<tr style="width:100%; overflow-x: scroll;">`+ crew +`</tr>
-								</table>
+								<div class="credit_table">
+									<p><b>Cast:</b><p>
+										<table>
+											<tr>`+ cast +`</tr>
+										</table>
+								</div>
+								<div class="credit_table">
+									<p><b>Crew:<b><p>
+									<table>
+										<tr>`+ crew +`</tr>
+									</table>
+								</div>
 							</div>
 							<div class="row">
 							</div>
@@ -135,64 +170,6 @@
 
 				$('#result').append(content).hide().fadeIn(); 			
 		});
-
-		// 			
-		// 			var imdbRating;
-		// 			var srcImage;
-		// 			var imdbURL = "https://www.imdb.com/title/" + result.imdbID +"/";
-
-		// 			// check if there is a rating given
-		// 			var rating;
-		// 			imdbRating = result.imdbRating;
-		// 			if (imdbRating !== 'N/A')
-		// 				var rating = imdbRating+"/10";
-		// 			else
-		// 				var rating = 'N/A';						
-
-		// 			// check if there is a movie poster avaliable
-		// 			if(result.Poster === 'N/A')
-		// 				srcImage = "https://xulonpress.com/bookstore/images/ImageNotAvailable_300x450.jpg";
-		// 			else 
-		// 				srcImage = result.Poster;	
-
-		// 			content = 
-		// 			`<div class="card-header">
-		// 				<h4 id="movieName" class="card-title">`+ result.Title+ `</h4>
-		// 				<p class="text-muted">(` + result.Year +`)</p>
-		// 			</div>
-		// 			<div class="card-body">	
-		// 				<div class="container-fluid">
-		// 					<div class="row">
-		// 						<div class="col-sm-4 gallery-pad">
-		// 							<img src="` + srcImage + `"/>
-		// 							<div class="row IMDb" style="padding: 5px;">
-		// 								<div class="col-sm gallery-pad">
-		// 									<p><i class="fas fa-star"></i> `+ rating +`</p>
-		// 								</div>
-		// 								<div class="vl"></div>
-		// 								<div class="col-sm gallery-pad">
-		// 									<a href="`+ imdbURL +`">Go to IMDb Page</a>
-		// 								</div>
-		// 							</div>
-		// 						</div>
-		// 						<div class="col-sm-8 gallery-pad">
-		// 							<p><b>Genre:</b> `+ result.Genre +`</p>
-		// 							<br>
-		// 							<p><b>Plot:</b> `+ result.Plot +`</p>
-		// 							<br>
-		// 							<p><b>Cast:</b> `+ result.Actors +`</p>
-		// 						</div>
-		// 					</div>
-		// 					<div class="row">
-		// 					</div>
-		// 					<div class="row">
-		// 					</div>
-		// 				</div>
-		// 			</div>`;
-			
-		// 			$('#result').append(content).hide().fadeIn(); 
-		// 	}
-		// });
 	}
 
 	function stringifyGenre(result)
@@ -202,29 +179,6 @@
 
 		return result;
 	}
-
-/*
-Crew:
-credit_id: "55ef67979251412c32005012"
-department: "Directing"
-gender: 2
-id: 2127
-job: "Director"
-name: "James Wan"
-profile_path: "/9AlAMoHVDUX8GVOTw6JOyKil8k9.jpg"
-
-Cast:
-
-cast_id: 0
-character: "Arthur Curry / Aquaman"
-credit_id: "545b5fbcc3a368535300121a"
-gender: 2
-id: 117642
-name: "Jason Momoa"
-order: 0
-profile_path: "/nR7DeguIKnXWaFDrWQz0mIySoDg.jpg"
-
-*/
 
 	function fillTable(result, type) // type = cast or crew
 	{
@@ -246,7 +200,8 @@ profile_path: "/nR7DeguIKnXWaFDrWQz0mIySoDg.jpg"
 			if (type == "crew")
 				role = result[i].job;  // ""+ result[i].job +" ("+ result[i].department +")";
 			 
-			content += "<td><table><tr><b>"+ result[i].name +"<b></tr><tr><img src='"+ srcImage +"'/></tr><tr>"+ role +"</tr></table></td>";
+			content += 
+			"<td><table><tr><div class='cell_name'><b>"+ result[i].name +"</b></div></tr><tr><div class='cell_image'><img src='"+ srcImage +"'/></div></tr><tr><div class='cell_role'><p>"+ role +"</p></div></tr></table></td>";
 		}
 
 		return content; 
