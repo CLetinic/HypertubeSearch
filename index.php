@@ -247,12 +247,8 @@
 			{	
 
 				console.log("\n\n\n\n\n\n");
-				console.log("filter");
-				console.log(filter);
-				console.log("sort");
-				console.log(sort);
-				// console.log("sortMethod");
-				// console.log(sortMethod);
+				console.log("Data");
+				console.log(rawdata);
 				console.log("\n\n\n\n\n\n");
 
 				var result; 
@@ -339,87 +335,7 @@
 			});
 		});		
 
-		// removes any duplicate movies just in case
-		function remove_Dup(arr) 
-		{
-			var result = []; // this is what must be returned
-			var temp = []; // this array will store the ID and can compare against 
-
-			for (var i = 0; i < arr.length; i++) 
-			{
-				for (var j = 1; j < arr.length; j++) 
-				{	
-					if (arr[i].imdbID != arr[j].imdbID)
-					{
-						if (!(temp.includes(arr[i].imdbID)))
-						{
-							temp.push(arr[i].imdbID);
-							if (!(result.includes(arr[i])))
-								result.push(arr[i]);
-						}
-					}
-				}			
-			}
-			return result;
-		}
 	});
-
-	function filterFunction(movieArray, filterType)
-	{
-		console.log("\n\n filter\n\n")
-		if (filterType != "None")
-		{
-			if (filterType == "Year")
-			{
-				let to = $("#filterFormYearSelectorTo").children("option:selected").val();
-				let from = $("#filterFormYearSelectorFrom").children("option:selected").val();
-
-				movieArray = isBetweenValue(movieArray, filterType, from, to);
-			}
-			else if (filterType == "imdbRating")
-			{
-				let to = $("#filterFormRatingSelectorTo").children("option:selected").val();
-				let from = $("#filterFormRatingSelectorFrom").children("option:selected").val();
-
-				movieArray = isBetweenValue(movieArray, filterType, from, to);
-			}
-			else if (filterType == "genre_ids")
-			{
-				let genreId = $("#filterFormGenreSelector").children("option:selected").val();
-				
-				movieArray = sortGenre(movieArray, genreId , "filter");
-			}
-		}
-		return movieArray;
-	}
-
-	function sortFunction(movieArray, sortType)
-	{	
-		console.log("\n\n SORT \n\n")
-		if (sortType != "None")  
-		{
-			let sortID = getSortID(sortType);
-			let sortMeth = $("#"+ sortID +"").children("option:selected").val();
-			console.log(sortType);
-			console.log(sortMeth);
-			console.log(sortID);
-
-			// SORT TYPES
-			if (sortType == "genre_ids")
-				movieArray = sortGenre(movieArray, sortMeth, "sort"); // sortMeth is the genre.id in this case
-
-			// SORT METHODS
-			if (sortMeth == "asc")
-				movieArray = sortAscending(movieArray, sortType);
-			else if (sortMeth == "desc")
-				movieArray = sortDescending(movieArray, sortType);
-
-			// this is used to remove or append movies that don't have ratings
-			if (sortType == "imdbRating")
-				movieArray = appendNoRating(movieArray, sortMeth); //movieArray = removeNoRating(movieArray); 
-		}
-		return movieArray;
-	}
 
 	function getSortID(sortType)
 	{
@@ -431,28 +347,6 @@
 			return "sortFormRatingSelector";
 		if (sortType == "genre_ids")
 			return "sortFormGenreSelector";
-	}
-
-	function isBetweenValue(result, sortType, value1, value2)
-	{
-		let arr = [];
-		let small = parseFloat(value1);
-		let big = parseFloat(value2);
-
-		// this is just incase someone tries to invert the values
-		if (small > big)
-		{
-			console.log("value2 bigger");
-			[small, big] = [big, small]
-		}
-
-		for(let i = 0; i < result.length; i++) 
-		{
-			if (((small <= Number(result[i][sortType])) && (Number(result[i][sortType]) <= big)) || ((value1 == value2) && (result[i][sortType] == value2)))
-				arr.push(result[i]);
-		}
-
-		return arr;	
 	}
 
 	function getMovieData(result, pageType)
@@ -471,115 +365,6 @@
 		return result;	
 	}
 
-	// remove results that have no rating
-	function removeNoRating(result)
-	{
-		let arr = [];
-
-		for(let i = 0; i < result.length; i++) 
-		{
-			if (!(result[i].imdbRating === 'N/A' || result[i].imdbRating === 'undefined' || result[i].imdbRating === undefined || result[i].imdbRating === 'null' && result[i].imdbRating === null || isNaN(result[i].imdbRating)))
-			{
-				arr.push(result[i]);
-			}
-		}
-		return arr;	
-	}
-
-	// place not rating items at the end
-	function appendNoRating(result, sort)
-	{
-		let arr = [];
-		let arr2 = [];
-
-		for(let i = 0; i < result.length; i++) 
-		{
-			if (!(result[i].imdbRating === 'N/A' || result[i].imdbRating === 'undefined' || result[i].imdbRating === undefined || result[i].imdbRating === 'null' && result[i].imdbRating === null || isNaN(result[i].imdbRating)))
-			{
-				arr.push(result[i]);
-			}
-			else 
-				arr2.push(result[i]);
-		}
-
-		if (sort == "asc")
-			arr = arr2.concat(arr);
-		else if (sort == "desc")
-			arr = arr.concat(arr2);
-		return arr;	
-	}
-
-	// look for selected genre and put that at the top.
-	// in the case that we want only the selected genre to show, remove the concat
-	function sortGenre(result, genreID, type)
-	{
-		console.log("\nGENRE SORT\n")
-
-		let arr = [];
-		let arr2 = [];
-
-		console.log(result);
-		console.log(genreID);
-		console.log(type);
-		console.log(arr);
-
-		// iterate through the movie arrays
-		for(let i = 0; i < result.length; i++) 
-		{
-			console.log(result[i]);
-			// iterate through the genre array
-			for(let j = 0; j < result[i].genre_ids.length; j++) 
-			{
-				if (result[i].genre_ids[j] == genreID)
-				{
-					if (!(arr.includes(result[i]))) 
-					{
-						arr.push(result[i]);
-						console.log(arr);
-					}
-				}
-
-			}
-			if ((!(arr.includes(result[i]))) && (!(arr.includes(result[i]))))
-				arr2.push(result[i]);
-		}
-		if (type == "sort")
-			arr = arr.concat(arr2);
-		console.log(arr);
-		return arr;	
-	}
-
-	function sortAscending(result, field) 
-	{
-		let arr = [];
-		for(let i = 0; i < result.length; i++) 
-		{
-			for(let j = i; j < result.length; j++) 
-			{
-				if (result[i][field] > result[j][field]) 
-					[result[i], result[j]] = [result[j], result[i]]; // simplified swap
-			}
-				arr.push(result[i]);
-		}
-		return arr;
-	}
-
-	function sortDescending(result, field) 
-	{
-		let arr = [];
-
-		for(let i = 0; i < result.length; i++) 
-		{
-			for(let j = i; j < result.length; j++) 
-			{
-				if (result[i][field] < result[j][field]) 
-					[result[i], result[j]] = [result[j], result[i]]; // simplified swap
-			}
-				arr.push(result[i]);
-		}
-		return arr;
-	}
-
 	// AESTHETIC - This is just a hovering affect
 	function movieHoverIn(elem)
 	{
@@ -596,6 +381,8 @@
 		$(elem).children().css("color", "#888888");
 	};
 
+
+	// REDIRECT
 	function loadInfo(id)
 	{
 		location.href += 'movieInfoPage.php?id='+ id +'';
