@@ -55,7 +55,8 @@ function sortDescending(result, field)
 
 // look for selected genre and put that at the top.
 // in the case that we want only the selected genre to show, remove the concat
-function sortGenre(result, genreID, type)
+// type = sprt or filter
+function sortGenre(result, genreID, type) 
 {
 	let arr = [];
 	let arr2 = [];
@@ -100,7 +101,7 @@ function removeNoRating(result)
 	return arr;	
 }
 
-// place not rating items at the end
+// place non-rating items at the end
 function appendNoRating(result, sort)
 {
 	let arr = [];

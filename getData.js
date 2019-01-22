@@ -1,7 +1,8 @@
 
+
+
 // This function goes through the multiple apis and then appens all the information into one json object so that other functions can extract data from it 
 // and prevents the need to make multiple calls in different functions.
-
 function appendMovieData(result, ID, pageType) // search or info page
 {				
 	//here we access OMDB and append some relevant fields we might need
@@ -37,7 +38,6 @@ function appendMovieData(result, ID, pageType) // search or info page
 				result = $.extend({}, result, moviecredit);
 			});
 		}
-	});			
-
+	});
 	return result;	
 }

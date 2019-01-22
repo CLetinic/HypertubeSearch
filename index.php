@@ -187,9 +187,19 @@
 		<div id="result" class="row">	
 		</div>		
 	</div>
+	<div id="pagination-container"></div>
 </body>
 </html>
 <script type="text/javascript">
+
+// 	$('#demo').pagination({
+//     dataSource: [1, 2, 3, 4, 5, 6, 7, ... , 195],
+//     callback: function(data, pagination) {
+//         // template method of yourself
+//         var html = template(data);
+//         dataContainer.html(html);
+//     }
+// })
 
 	// const api = "&api_key=4084c07502a720532f5068169281abff";
 	// const endpoint = `https://api.themoviedb.org/3/search/movie?query=${search}${api}`;
@@ -237,6 +247,36 @@
 		$('.fieldinput').change(function(event) 
 		{
 			$('#result').fadeOut();
+
+			$('#pagination-container').pagination(
+			{
+				/*
+				page: 1
+				results: (20) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+				total_pages: 10
+				total_results: 196
+				*/
+
+				dataSource: `https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`,
+				locator: 'results',
+				totalNumber: 10,
+				pageSize: 20,
+				ajax: 
+				{
+					beforeSend: function() 
+					{
+						//$("#dataContainer").html('Loading data from flickr.com ...');
+						console.log('Loading data from flickr.com ...')
+					}
+				},
+				callback: function(data, pagination) 
+				{
+					console.log("success");
+					// template method of yourself
+					//var html = template(data);
+					//$("#dataContainer")dataContainer.html("html");
+				}
+			})
 
 			// to get search data - this fetches an array of movies with matches to the search
 			// themoviedb has a much more powerful search functionality 
@@ -336,6 +376,16 @@
 		});		
 
 	});
+
+// 	function template(data) {
+//     var html = '<ul>';
+//     $.each(data, function(index, item){
+//         html += '<li>'+ item +'</li>';
+//     });
+//     html += '</ul>';
+//     return html;
+// }
+
 
 	function getSortID(sortType)
 	{
