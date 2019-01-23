@@ -5,6 +5,48 @@
 	<?php
 		require_once("header.php");
 	?>
+	<!-- Pagination -->
+<style>
+	.paginationjs .paginationjs-pages li
+	{
+		background-color: #272727;
+		border: none;
+	}
+	.paginationjs .paginationjs-pages li>a
+	{
+		background-color: #272727;
+		color: white;
+		border: none;		
+		outline: none;
+		height: 30px;
+		line-height: 30px;
+	}
+	.paginationjs .paginationjs-pages li>a:hover
+	{
+		background-color: #9933CC;
+		border: none;		
+		outline: none;
+		line-height: 25px;
+	}
+	.paginationjs .paginationjs-pages li.active>a
+	{
+		background-color: #9933CC;
+		color: white
+		border: none;		
+		outline: none;
+	}
+	.disabled
+	{
+		color: #888888;
+		border: none;		
+		outline: none;
+	}
+	.paginationjs .paginationjs-pages li:last-child
+	{
+		border: none;
+	}
+	
+</style>
 <script type="text/javascript" src="getData.js"></script>
 </head>
 <body>
@@ -189,9 +231,12 @@
 		</div>
 		<div id="result" class="row">
 			
-		</div>		
+		</div>
+		<div class="row">
+			<div id="pagination-container" style="margin: auto; padding: 2%;"></div>
+		</div>	
 	</div>
-	<div id="pagination-container"></div>
+	
 </body>
 </html>
 <script type="text/javascript">
@@ -285,9 +330,10 @@
 				callback: function(data, pagination) 
 				{
 					// template method of yourself
-					console.log("success");
-					console.log(data);
-					console.log(pagination);
+					if ($('#loading').css('display') == 'none')
+						$('#loading').fadeIn(50);
+
+
 					$.get(`https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff&page=`+ pagination.pageNumber +``, function(rawdata)
 					{						
 						console.log(rawdata); // https://gifyu.com/image/w0pl
