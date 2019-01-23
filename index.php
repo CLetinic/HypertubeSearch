@@ -375,6 +375,7 @@
 								rating = imdbRating + "/10";	
 
 							// check if there is an IMDB ID to have a URL
+							// TECHNICALLY this should not have to be checked since we removed all moves without an ID
 							if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || rating === 'N/A')
 								imdbURL = "<p> </p>";
 							else
@@ -438,16 +439,6 @@
 		});		
 	});
 
-// 	function template(data) {
-//     var html = '<ul>';
-//     $.each(data, function(index, item){
-//         html += '<li>'+ item +'</li>';
-//     });
-//     html += '</ul>';
-//     return html;
-// }
-
-
 	function getSortID(sortType)
 	{
 		if (sortType == "title")
@@ -473,6 +464,25 @@
 				console.log(result[i]);
 			});			
 		}
+
+		result = removeNoID(result);
+
+		return result;	
+	}
+
+	function removeNoID (result)
+	{
+		let arr = [];
+
+		for(let i = 0; i < result.length; i++) 
+		{
+			if (!(result.imdbID === 'N/A' || result.imdbID === 'undefined' || result.imdbID === undefined || result.imdbID === 'null' || result.imdbID === null))
+			{
+				arr.push(result[i]);
+			}
+		}
+		//result = removeDup(arr);
+		result = arr;
 		return result;	
 	}
 

@@ -125,7 +125,7 @@ function appendNoRating(result, sort)
 }
 
 // removes any duplicate movies just in case
-function remove_Dup(arr) 
+function removeDup(arr) 
 {
 	var result = []; // this is what must be returned
 	var temp = []; // this array will store the ID and can compare against 
