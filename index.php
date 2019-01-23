@@ -184,7 +184,11 @@
 		</script>
 	</div>
 	<div class="container-fluid">
-		<div id="result" class="row">	
+		<div class="row">
+			<img id="loading" src="http://i68.tinypic.com/zk3gol.gif" style="margin-left: auto; margin-right: auto; display: none;" alt="Loading..." title="Loading..."/>
+		</div>
+		<div id="result" class="row">
+			
 		</div>		
 	</div>
 	<div id="pagination-container"></div>
@@ -247,134 +251,145 @@
 		$('.fieldinput').change(function(event) 
 		{
 			$('#result').fadeOut();
-
 			$('#pagination-container').pagination(
 			{
-				/*
-				page: 1
-				results: (20) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-				total_pages: 10
-				total_results: 196
-				*/
+				dataSource: function(done) 
+				{
+					$.ajax(
+					{
+						type: 'GET',
+						url: `https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`,
+						success: function(response) 
+						{
+							$('#loading').fadeIn(50);
 
-				dataSource: `https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`,
-				locator: 'results',
-				totalNumber: 10,
-				pageSize: 20,
+							let result = [];
+							let totalPage = (response.total_pages * 10);
+
+							for (var i = 1; i < totalPage; i++) 
+							{
+								// 20 items represent 1 page (20 = 1)
+								result.push(i);
+							}
+							done(result);							
+						}
+					});
+				},
 				ajax: 
 				{
 					beforeSend: function() 
 					{
-						//$("#dataContainer").html('Loading data from flickr.com ...');
-						console.log('Loading data from flickr.com ...')
+						console.log('Loading data from flickr.com ...');
 					}
 				},
 				callback: function(data, pagination) 
 				{
-					console.log("success");
 					// template method of yourself
-					//var html = template(data);
-					//$("#dataContainer")dataContainer.html("html");
-				}
-			})
+					console.log("success");
+					console.log(data);
+					console.log(pagination);
+					$.get(`https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff&page=`+ pagination.pageNumber +``, function(rawdata)
+					{						
+						console.log(rawdata); // https://gifyu.com/image/w0pl
 
-			// to get search data - this fetches an array of movies with matches to the search
-			// themoviedb has a much more powerful search functionality 
-			// Whereas omdb has a better resources from on IMDB
+						// to get search data - this fetches an array of movies with matches to the search
+						// themoviedb has a much more powerful search functionality 
+						// Whereas omdb has a better resources from on IMDB
 
-			// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
-			$.get(`https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`, function(rawdata)
-			{	
+						// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
 
-				console.log("\n\n\n\n\n\n");
-				console.log("Data");
-				console.log(rawdata);
-				console.log("\n\n\n\n\n\n");
+						console.log("\n\n\n\n\n\n");
+						console.log("Data");
+						console.log(rawdata);
+						console.log("\n\n\n\n\n\n");
 
-				var result; 
-				result = getMovieData(rawdata.results, "search");
-				result = filterFunction(result, filter);
-				result = sortFunction(result, sort);	
+						var result; 
+						result = getMovieData(rawdata.results, "search");
+						result = filterFunction(result, filter);
+						result = sortFunction(result, sort);
 
-				$('#result').html('');
-				result.forEach(function(moviedata) 
-				{				
-					console.log("OMDB")
-					console.log(moviedata);
-					var content;
-					var imdbRating;
-					var imdbURL;
+						$('#loading').fadeOut()
 
-					//ERROR CHECKING - so as not to get funny values displaying
-					// check if there is a rating given
-					var rating;
-					imdbRating = moviedata.imdbRating;
-					if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null || isNaN(imdbRating)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
-						rating = 'N/A';
-					else
-						rating = imdbRating + "/10";	
+						$('#result').html('');
+						result.forEach(function(moviedata) 
+						{				
+							console.log("OMDB")
+							console.log(moviedata);
+							var content;
+							var imdbRating;
+							var imdbURL;
 
-					// check if there is an IMDB ID to have a URL
-					if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || rating === 'N/A')
-						imdbURL = "<p> </p>";
-					else
-						imdbURL = "<a href='"+ moviedata.imdbURL +"'>Go to IMDb Page</a>";
+							//ERROR CHECKING - so as not to get funny values displaying
+							// check if there is a rating given
+							var rating;
+							imdbRating = moviedata.imdbRating;
+							if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null || isNaN(imdbRating)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
+								rating = 'N/A';
+							else
+								rating = imdbRating + "/10";	
 
-					//check if there is a year provided
-					var yearRelease = moviedata.Year;
-					if (yearRelease === 'N/A' || yearRelease === 'undefined' || yearRelease === undefined || yearRelease === 'null' || yearRelease === null || isNaN(yearRelease) || yearRelease <= 0) 
-						yearRelease = 'N/A';
+							// check if there is an IMDB ID to have a URL
+							if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || rating === 'N/A')
+								imdbURL = "<p> </p>";
+							else
+								imdbURL = "<a href='"+ moviedata.imdbURL +"'>Go to IMDb Page</a>";
 
-					// check if there is a movie poster avaliable
-					var srcImage;
-					if (!(moviedata.poster_path === null))
-						srcImage = "https://image.tmdb.org/t/p/w342" + moviedata.poster_path;
-					else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
-						srcImage = moviedata.Poster;
-					else 
-						srcImage = "http://i67.tinypic.com/10fc1lg.jpg";	
+							//check if there is a year provided
+							var yearRelease = moviedata.Year;
+							if (yearRelease === 'N/A' || yearRelease === 'undefined' || yearRelease === undefined || yearRelease === 'null' || yearRelease === null || isNaN(yearRelease) || yearRelease <= 0) 
+								yearRelease = 'N/A';
 
-					// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
-					var titleSize;
-					if(moviedata.title.length <= 65) 
-						titleSize = "font-size: 1.2rem";
-					else
-						 titleSize = "font-size: 100%";
-					
-					var originalTitle;
-					if (moviedata.title != moviedata.original_title)
-						originalTitle = `<h6>(`+ moviedata.original_title +`)</h6>`;
-					else
-						originalTitle = ""
-					
+							// check if there is a movie poster avaliable
+							var srcImage;
+							if (!(moviedata.poster_path === null))
+								srcImage = "https://image.tmdb.org/t/p/w342" + moviedata.poster_path;
+							else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
+								srcImage = moviedata.Poster;
+							else 
+								srcImage = "http://i67.tinypic.com/10fc1lg.jpg";	
 
-					// this is creating a div with the content inside of it
-					content = 
-					`<div id="`+ moviedata.imdbID +`"class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('`+ moviedata.imdbID +`')">
-						<div class="card-header">
-							<h5 class="card-title" style="`+ titleSize +`">`+ moviedata.title +`</h5>
-							`+ originalTitle +`
-						</div>
-						<div class="card-body">
-							<i class="far fa-eye" style="float: right; font-size: large; display:none;"></i>
-							<br>
-							<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
-							<br>
-							<p text-muted>Year Released: ` + yearRelease +`</p>
-						</div>
-						<div class="card-footer">
-							<p><i class="fas fa-star"></i> `+ rating +`</p>
-							<br>
-							`+ imdbURL +`
-						</div>
-					</div>`;
-				
-					$('#result').append(content).hide().fadeIn(); 
+							// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
+							var titleSize;
+							if(moviedata.title.length <= 65) 
+								titleSize = "font-size: 1.2rem";
+							else
+								 titleSize = "font-size: 100%";
 							
-				});
+							var originalTitle;
+							if (moviedata.title != moviedata.original_title)
+								originalTitle = `<h6>(`+ moviedata.original_title +`)</h6>`;
+							else
+								originalTitle = ""
+							
+
+							// this is creating a div with the content inside of it
+							content = 
+							`<div id="`+ moviedata.imdbID +`"class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('`+ moviedata.imdbID +`')">
+								<div class="card-header">
+									<h5 class="card-title" style="`+ titleSize +`">`+ moviedata.title +`</h5>
+									`+ originalTitle +`
+								</div>
+								<div class="card-body">
+									<i class="far fa-eye" style="float: right; font-size: large; display:none;"></i>
+									<br>
+									<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
+									<br>
+									<p text-muted>Year Released: ` + yearRelease +`</p>
+								</div>
+								<div class="card-footer">
+									<p><i class="fas fa-star"></i> `+ rating +`</p>
+									<br>
+									`+ imdbURL +`
+								</div>
+							</div>`;
+						
+							$('#result').append(content).hide().fadeIn(); 
+									
+						});
+					});
+				}
 			});
 		});		
-
 	});
 
 // 	function template(data) {
