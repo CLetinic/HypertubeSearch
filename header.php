@@ -56,9 +56,10 @@
 		{
 			margin: auto;
 			margin-top: 10%;
-			width: 85%;
+			width: 75%;
 			outline: none;
 			text-align: center;
+			padding-bottom: 5%;
 		}
 		.form
 		{

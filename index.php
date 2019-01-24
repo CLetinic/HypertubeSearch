@@ -233,7 +233,7 @@
 			
 		</div>
 		<div class="row">
-			<div id="pagination-container" style="margin: auto; padding: 2%;"></div>
+			<div id="pagination-container" style="display: none; margin: auto; padding: 2%;"></div>
 		</div>	
 	</div>
 	
@@ -296,6 +296,9 @@
 		$('.fieldinput').change(function(event) 
 		{
 			$('#result').fadeOut();
+			$('#pagination-container').css("display", "none");
+			$('#loading').fadeOut(50);
+
 			$('#pagination-container').pagination(
 			{
 				dataSource: function(done) 
@@ -308,27 +311,33 @@
 						{
 							$('#loading').fadeIn(50);
 
+							if (!(response.total_results == 0))	
+								$('#pagination-container').css("display", "block");
+
 							let result = [];
-							let totalPage = (response.total_pages * 10);
+							let totalPage = (response.total_pages * 20); // page size stores 20 items per page
 
 							for (var i = 1; i < totalPage; i++) 
 							{
-								// 20 items represent 1 page (20 = 1)
 								result.push(i);
 							}
+
 							done(result);							
 						}
 					});
 				},
+				pageSize: 20,
 				ajax: 
 				{
 					beforeSend: function() 
 					{
-						console.log('Loading data from flickr.com ...');
+						console.log('Loading data ...');
 					}
 				},
 				callback: function(data, pagination) 
 				{
+					//$('#pagination-container').css('display') == 'none';
+
 					// template method of yourself
 					if ($('#loading').css('display') == 'none')
 						$('#loading').fadeIn(50);
@@ -467,22 +476,6 @@
 
 		result = removeNoID(result);
 
-		return result;	
-	}
-
-	function removeNoID (result)
-	{
-		let arr = [];
-
-		for(let i = 0; i < result.length; i++) 
-		{
-			if (!(result.imdbID === 'N/A' || result.imdbID === 'undefined' || result.imdbID === undefined || result.imdbID === 'null' || result.imdbID === null))
-			{
-				arr.push(result[i]);
-			}
-		}
-		//result = removeDup(arr);
-		result = arr;
 		return result;	
 	}
 

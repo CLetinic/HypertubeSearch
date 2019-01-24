@@ -124,6 +124,24 @@ function appendNoRating(result, sort)
 	return arr;	
 }
 
+// OTHER
+function removeNoID (result)
+{
+
+	let arr = [];
+
+	for(let i = 0; i < result.length; i++) 
+	{
+		if (!(result[i].imdbID === 'N/A' || result[i].imdbID === 'undefined' || result[i].imdbID === undefined || result[i].imdbID === 'null' || result[i].imdbID === null || result[i].imdbID === ""))
+		{
+			arr.push(result[i]);
+		}
+	}
+	result = removeDup(arr);
+
+	return result;	
+}
+
 // removes any duplicate movies just in case
 function removeDup(arr) 
 {
