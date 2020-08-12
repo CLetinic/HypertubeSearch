@@ -88,6 +88,9 @@ Browse to site location
 - [TheMovieDB (TMDb)](https://www.themoviedb.org/documentation/api?language=en-US)
 - [The Open Movie Database (OMDb)](http://www.omdbapi.com/)
 
+# Front-End Theme
+- [Bootswatch - Cyborg](https://bootswatch.com/cyborg/)
+
 # Project Insight
 ## Project Brief
 - [Hypertube Project Brief](./misc/documents/hypertube.en.pdf)
