@@ -69,7 +69,7 @@ Start the server
 
 Browse to site location
 
-[http://localhost:8080/Hypertube](http://localhost:8080/Hypertube)
+[http://localhost:8080/HypertubeSearch/](http://localhost:8080/HypertubeSearch/)
 
 # Samples | Screenshots
 ## Landing | Home page  
