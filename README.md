@@ -73,7 +73,15 @@ Browse to site location
 
 # Samples | Screenshots
 ## Landing | Home page  
-<!-- ![Screenshot_Landingpage](./misc/images/) -->
+![Screenshot](./misc/images/Screenshots/Screenshot1.png)
+
+## Search  
+![Screenshot](./misc/images/Screenshots/Screenshot2.png)
+![Screenshot](./misc/images/Screenshots/Screenshot3.png)
+
+## Movie View Page  
+![Screenshot](./misc/images/Screenshots/Screenshot4.png)
+![Screenshot](./misc/images/Screenshots/Screenshot5.png)
 
 # APIs Used
 ## Movie APIs
