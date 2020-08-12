@@ -1,6 +1,6 @@
 # Hypertube Search
 
-Hypertube is a mock/clone movie streaming site where users can search for movies that they can either steam or download.  
+Hypertube is a mock/clone movie streaming site where users can search for movies that they can either stream or download.  
 
 The aim of this project, one of the Web projects from the 42 / WeThinkCode_ curriculum, is to develop a website and demonstrate the learning of the use/implementation of external APIs, oauthentication (external authentication), and torrent protocols. 
 
