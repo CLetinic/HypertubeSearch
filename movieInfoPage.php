@@ -103,7 +103,7 @@
 			else if (!(result.Poster === 'N/A' || result.Poster === undefined))
 				srcImage = result.Poster;
 			else 
-				srcImage = "http://i67.tinypic.com/10fc1lg.jpg";
+				srcImage = "./assets/images/noImagePoster.svg";
 
 			var originalTitle;
 			if (result.title != result.original_title)
@@ -191,9 +191,9 @@
 
 			let srcImage;
 			if (!(result[i].profile_path === null))
-			srcImage = "https://image.tmdb.org/t/p/w90_and_h90_face/" + result[i].profile_path; // w342 //https://image.tmdb.org/t/p/w90_and_h90_face/kU3B75TyRiCgE270EyZnHjfivoq.jpg
+				srcImage = "https://image.tmdb.org/t/p/w90_and_h90_face/" + result[i].profile_path; // w342 //https://image.tmdb.org/t/p/w90_and_h90_face/kU3B75TyRiCgE270EyZnHjfivoq.jpg
 			else
-				srcImage = "http://i63.tinypic.com/2hp39tg.png"
+				srcImage = "./assets/images/noImageProfile.svg"
 			
 			if (type == "cast")
 				role = result[i].character;

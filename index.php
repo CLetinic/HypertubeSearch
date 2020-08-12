@@ -1,115 +1,222 @@
-
-
 <!DOCTYPE html>
 <html>
+
 <head>
-<title></title>
+	<title></title>
 	<?php
 		require_once("header.php");
 	?>
 	<!-- Pagination -->
-<style>
-	.paginationjs .paginationjs-pages li
-	{
-		background-color: #272727;
-		border: none;
-	}
-	.paginationjs .paginationjs-pages li>a
-	{
-		background-color: #272727;
-		color: white;
-		border: none;		
-		outline: none;
-		height: 30px;
-		line-height: 30px;
-	}
-	.paginationjs .paginationjs-pages li>a:hover
-	{
-		background-color: #9933CC;
-		border: none;		
-		outline: none;
-		line-height: 25px;
-	}
-	.paginationjs .paginationjs-pages li.active>a
-	{
-		background-color: #9933CC;
-		color: white
-		border: none;		
-		outline: none;
-	}
-	.disabled
-	{
-		color: #888888;
-		border: none;		
-		outline: none;
-	}
-	.paginationjs .paginationjs-pages li:last-child
-	{
-		border: none;
-	}
-	
-</style>
-<script type="text/javascript" src="getData.js"></script>
+	<style>
+		.paginationjs .paginationjs-pages li {
+			background-color: #272727;
+			border: none;
+		}
+
+		.paginationjs .paginationjs-pages li>a {
+			background-color: #272727;
+			color: white;
+			border: none;
+			outline: none;
+			height: 30px;
+			line-height: 30px;
+		}
+
+		.paginationjs .paginationjs-pages li>a:hover {
+			background-color: #9933CC;
+			border: none;
+			outline: none;
+			line-height: 25px;
+		}
+
+		.paginationjs .paginationjs-pages li.active>a {
+			background-color: #9933CC;
+			color: white border: none;
+			outline: none;
+		}
+
+		.disabled {
+			color: #888888;
+			border: none;
+			outline: none;
+		}
+
+		.paginationjs .paginationjs-pages li:last-child {
+			border: none;
+		}
+
+		.loading-row {
+			display: flex;
+    		justify-content: center;
+		}
+		
+		/* https://loading.io/css/ */
+		.lds-spinner {
+			color: official;
+			display: inline-block;
+			position: relative;
+			width: 80px;
+			height: 80px;
+		}
+
+		.lds-spinner div {
+			transform-origin: 40px 40px;
+			animation: lds-spinner 1.2s linear infinite;
+		}
+
+		.lds-spinner div:after {
+			content: " ";
+			display: block;
+			position: absolute;
+			top: 3px;
+			left: 37px;
+			width: 6px;
+			height: 18px;
+			border-radius: 20%;
+			background: #fff;
+		}
+
+		.lds-spinner div:nth-child(1) {
+			transform: rotate(0deg);
+			animation-delay: -1.1s;
+		}
+
+		.lds-spinner div:nth-child(2) {
+			transform: rotate(30deg);
+			animation-delay: -1s;
+		}
+
+		.lds-spinner div:nth-child(3) {
+			transform: rotate(60deg);
+			animation-delay: -0.9s;
+		}
+
+		.lds-spinner div:nth-child(4) {
+			transform: rotate(90deg);
+			animation-delay: -0.8s;
+		}
+
+		.lds-spinner div:nth-child(5) {
+			transform: rotate(120deg);
+			animation-delay: -0.7s;
+		}
+
+		.lds-spinner div:nth-child(6) {
+			transform: rotate(150deg);
+			animation-delay: -0.6s;
+		}
+
+		.lds-spinner div:nth-child(7) {
+			transform: rotate(180deg);
+			animation-delay: -0.5s;
+		}
+
+		.lds-spinner div:nth-child(8) {
+			transform: rotate(210deg);
+			animation-delay: -0.4s;
+		}
+
+		.lds-spinner div:nth-child(9) {
+			transform: rotate(240deg);
+			animation-delay: -0.3s;
+		}
+
+		.lds-spinner div:nth-child(10) {
+			transform: rotate(270deg);
+			animation-delay: -0.2s;
+		}
+
+		.lds-spinner div:nth-child(11) {
+			transform: rotate(300deg);
+			animation-delay: -0.1s;
+		}
+
+		.lds-spinner div:nth-child(12) {
+			transform: rotate(330deg);
+			animation-delay: 0s;
+		}
+
+		@keyframes lds-spinner {
+			0% {
+				opacity: 1;
+			}
+
+			100% {
+				opacity: 0;
+			}
+		}
+	</style>
+	<script type="text/javascript" src="getData.js"></script>
 </head>
+
 <body>
 	<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
 		<div class="container">
-			<a href="#" class="navbar-brand">Hypertube</a>        
+			<a href="#" class="navbar-brand">Hypertube</a>
 		</div>
 	</div>
 	<br>
-	<div class="card border-info mb-3">                
+	<div class="card border-info mb-3">
 		<div class="card-body">
 			<h4 class="card-title">Search for a Movie</h4>
-			<!-- IF YOU WANT TO HAVE A SEARCH BUTTON --> 
+			<!-- IF YOU WANT TO HAVE A SEARCH BUTTON -->
 			<!-- <form id="searchForm" class="form-inline my-2 my-lg-0">
 				<input class="form" type="search" placeholder="Search" style="border-radius: 0%;">
 				<button id="searchText" type="submit"><i class="fa fa-search"></i></button> 
 			</form> -->
 			<div id="searchForm" class="form-inline my-2 my-lg-0">
-				<input id="searchbar" class="form fieldinput" type="search" placeholder="Search" style="border-radius: 0%;">
+				<input id="searchbar" class="form fieldinput" type="search" placeholder="Search"
+					style="border-radius: 0%;">
 			</div>
 			<br>
 			<!-- SORT  -->
 			<div id="sortForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Sort</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio1" name="sortFormRadio" class="custom-control-input sort fieldinput" value="" checked="">
+					<input type="radio" id="sortFormRadio1" name="sortFormRadio"
+						class="custom-control-input sort fieldinput" value="" checked="">
 					<label class="custom-control-label" for="sortFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio2" name="sortFormRadio" class="custom-control-input sort fieldinput" value="title"> <!-- value="&sort_by=original_title." -->
+					<input type="radio" id="sortFormRadio2" name="sortFormRadio"
+						class="custom-control-input sort fieldinput" value="title">
+					<!-- value="&sort_by=original_title." -->
 					<label class="custom-control-label" for="sortFormRadio2"> Name </label>
 					<div id="sortFormName" class="">
 						<select id="sortFormNameSelector" class="fieldinput">
-							<option class="" value="asc" selected>A - Z</option> 
+							<option class="" value="asc" selected>A - Z</option>
 							<option class="" value="desc">Z - A</option> <!-- Ascending -->
-						</select>						
+						</select>
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio3" name="sortFormRadio" class="custom-control-input sort fieldinput" value="Year">
+					<input type="radio" id="sortFormRadio3" name="sortFormRadio"
+						class="custom-control-input sort fieldinput" value="Year">
 					<!-- value="&sort_by=release_date." -->
 					<label class="custom-control-label" for="sortFormRadio3"> Year </label>
 					<div id="sortFormYear" class="fieldinput">
 						<select id="sortFormYearSelector">
-							<option class="" value="asc" >Oldest - Newest</option> <!-- Ascending -->
-							<option class="" value="desc" selected>Newest - Oldest</option> <!-- Descending release_date.desc primary_release_date.desc--> 
-						</select>						
-					</div>
-				</div>
-					<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio4" name="sortFormRadio" class="custom-control-input sort fieldinput" value="imdbRating">
-					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
-					<div id="sortFormRating" class="">
-						<select id="sortFormRatingSelector" class="fieldinput">
-							<option class="" value="desc" selected>Highest - Lowest</option> <!-- Descending --> <!-- This I will have to make my own -->
-							<option class="" value="asc">Lowest - Highest</option> <!-- Ascending -->
-						</select>						
+							<option class="" value="asc">Oldest - Newest</option> <!-- Ascending -->
+							<option class="" value="desc" selected>Newest - Oldest</option>
+							<!-- Descending release_date.desc primary_release_date.desc-->
+						</select>
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="sortFormRadio5" name="sortFormRadio" class="custom-control-input sort fieldinput" value="genre_ids">
+					<input type="radio" id="sortFormRadio4" name="sortFormRadio"
+						class="custom-control-input sort fieldinput" value="imdbRating">
+					<label class="custom-control-label" for="sortFormRadio4"> Rating </label>
+					<div id="sortFormRating" class="">
+						<select id="sortFormRatingSelector" class="fieldinput">
+							<option class="" value="desc" selected>Highest - Lowest</option> <!-- Descending -->
+							<!-- This I will have to make my own -->
+							<option class="" value="asc">Lowest - Highest</option> <!-- Ascending -->
+						</select>
+					</div>
+				</div>
+				<div class="custom-control custom-radio">
+					<input type="radio" id="sortFormRadio5" name="sortFormRadio"
+						class="custom-control-input sort fieldinput" value="genre_ids">
 					<label class="custom-control-label" for="sortFormRadio5"> Genre </label>
 					<div id="sortFormGenre" class="">
 						<select id="sortFormGenreSelector" class="fieldinput">
@@ -127,11 +234,11 @@
 							<option class="" value="10402">Music</option> <!-- 10402 -->
 							<option class="" value="9648">Mystery</option> <!-- 9648 -->
 							<option class="" value="10749">Romance</option> <!-- 10749 -->
-							<option class="" value="878">Sci-Fi</option> <!-- 878 -->	 
+							<option class="" value="878">Sci-Fi</option> <!-- 878 -->
 							<option class="" value="53">Thriller</option> <!-- 53 -->
 							<option class="" value="10752">War</option> <!-- 10752 -->
 							<option class="" value="37">Western</option> <!-- 37 -->
-						</select>							
+						</select>
 					</div>
 				</div>
 			</div>
@@ -140,22 +247,25 @@
 			<div id="filterForm" class="form-group" style="display: -webkit-inline-box;">
 				<h6>Filter</h6>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio1" name="filterFormRadio" class="custom-control-input filter fieldinput" value="" checked="">
+					<input type="radio" id="filterFormRadio1" name="filterFormRadio"
+						class="custom-control-input filter fieldinput" value="" checked="">
 					<label class="custom-control-label" for="filterFormRadio1"> None </label>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio2" name="filterFormRadio" class="custom-control-input filter fieldinput" value="Year">
+					<input type="radio" id="filterFormRadio2" name="filterFormRadio"
+						class="custom-control-input filter fieldinput" value="Year">
 					<label class="custom-control-label" for="filterFormRadio2"> Year </label>
 					<div class="">
 						<select id="filterFormYearSelectorFrom" class="fieldinput">
-						</select> 
-						to 
+						</select>
+						to
 						<select id="filterFormYearSelectorTo" class="fieldinput">
 						</select>
 					</div>
 				</div>
-					<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio3" name="filterFormRadio" class="custom-control-input filter fieldinput" value="imdbRating">
+				<div class="custom-control custom-radio">
+					<input type="radio" id="filterFormRadio3" name="filterFormRadio"
+						class="custom-control-input filter fieldinput" value="imdbRating">
 					<label class="custom-control-label" for="filterFormRadio3"> Rating </label>
 					<div class="">
 						<select id="filterFormRatingSelectorFrom" class="fieldinput">
@@ -166,7 +276,8 @@
 					</div>
 				</div>
 				<div class="custom-control custom-radio">
-					<input type="radio" id="filterFormRadio4" name="filterFormRadio" class="custom-control-input filter fieldinput" value="genre_ids">
+					<input type="radio" id="filterFormRadio4" name="filterFormRadio"
+						class="custom-control-input filter fieldinput" value="genre_ids">
 					<label class="custom-control-label" for="filterFormRadio4"> Genre </label>
 					<div class="">
 						<select id="filterFormGenreSelector" class="fieldinput">
@@ -184,73 +295,79 @@
 							<option class="" value="10402">Music</option> <!-- 10402 -->
 							<option class="" value="9648">Mystery</option> <!-- 9648 -->
 							<option class="" value="10749">Romance</option> <!-- 10749 -->
-							<option class="" value="878">Sci-Fi</option> <!-- 878 -->	 
+							<option class="" value="878">Sci-Fi</option> <!-- 878 -->
 							<option class="" value="53">Thriller</option> <!-- 53 -->
 							<option class="" value="10752">War</option> <!-- 10752 -->
 							<option class="" value="37">Western</option> <!-- 37 -->
-						</select>						
+						</select>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript">
-
 			// Populate the sort/filter drop downs
 			let currentYear = (new Date).getFullYear();
 
-			for (let i = currentYear; i >= 1900; i--) 
-			{	
-				if (i == 0)
-				{
-					$('#filterFormYearSelectorTo').append('<option value='+ i +' selected>'+ i +'</option>');
-					$('#filterFormYearSelectorFrom').append('<option value='+ i +' selected>'+ i +'</option>');
-				}
-				else 
-				{
-					$('#filterFormYearSelectorTo').append('<option value='+ i +'>'+ i +'</option>');
-					$('#filterFormYearSelectorFrom').append('<option value='+ i +'>'+ i +'</option>');
+			for (let i = currentYear; i >= 1900; i--) {
+				if (i == 0) {
+					$('#filterFormYearSelectorTo').append('<option value=' + i + ' selected>' + i + '</option>');
+					$('#filterFormYearSelectorFrom').append('<option value=' + i + ' selected>' + i + '</option>');
+				} else {
+					$('#filterFormYearSelectorTo').append('<option value=' + i + '>' + i + '</option>');
+					$('#filterFormYearSelectorFrom').append('<option value=' + i + '>' + i + '</option>');
 				}
 			}
 
-			for (let i = 10; i >= 0; i--) 
-			{
-				if (i == 10)
-				{
-					$('#filterFormRatingSelectorTo').append('<option value='+ i +' selected>'+ i +' / 10</option>');
-					$('#filterFormRatingSelectorFrom').append('<option value='+ i +' selected>'+ i +' / 10</option>');
-				}
-				else
-				{
-					$('#filterFormRatingSelectorTo').append('<option value='+ i +'>'+ i +' / 10</option>');
-					$('#filterFormRatingSelectorFrom').append('<option value='+ i +'>'+ i +' / 10</option>');
+			for (let i = 10; i >= 0; i--) {
+				if (i == 10) {
+					$('#filterFormRatingSelectorTo').append('<option value=' + i + ' selected>' + i + ' / 10</option>');
+					$('#filterFormRatingSelectorFrom').append('<option value=' + i + ' selected>' + i + ' / 10</option>');
+				} else {
+					$('#filterFormRatingSelectorTo').append('<option value=' + i + '>' + i + ' / 10</option>');
+					$('#filterFormRatingSelectorFrom').append('<option value=' + i + '>' + i + ' / 10</option>');
 				}
 			}
 		</script>
 	</div>
 	<div class="container-fluid">
-		<div class="row">
-			<img id="loading" src="http://i68.tinypic.com/zk3gol.gif" style="margin-left: auto; margin-right: auto; display: none;" alt="Loading..." title="Loading..."/>
+		<div class="row loading-row">
+			<!-- <img id="loading" src="http://i68.tinypic.com/zk3gol.gif" style="margin-left: auto; margin-right: auto; display: none;" alt="Loading..." title="Loading..."/> -->
+			<div id="loading" class="lds-spinner" style="display: none;">
+				<!-- THESE ARE SPINNERS -->
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
 		</div>
 		<div id="result" class="row">
-			
+
 		</div>
 		<div class="row">
 			<div id="pagination-container" style="display: none; margin: auto; padding: 2%;"></div>
-		</div>	
+		</div>
 	</div>
-	
+
 </body>
+
 </html>
 <script type="text/javascript">
-
-// 	$('#demo').pagination({
-//     dataSource: [1, 2, 3, 4, 5, 6, 7, ... , 195],
-//     callback: function(data, pagination) {
-//         // template method of yourself
-//         var html = template(data);
-//         dataContainer.html(html);
-//     }
-// })
+	// 	$('#demo').pagination({
+	//     dataSource: [1, 2, 3, 4, 5, 6, 7, ... , 195],
+	//     callback: function(data, pagination) {
+	//         // template method of yourself
+	//         var html = template(data);
+	//         dataContainer.html(html);
+	//     }
+	// })
 
 	// const api = "&api_key=4084c07502a720532f5068169281abff";
 	// const endpoint = `https://api.themoviedb.org/3/search/movie?query=${search}${api}`;
@@ -261,8 +378,7 @@
 	//https://www.youtube.com/watch?v=bpHtxx_wmqw
 
 	// SEARCH
-	$(document).ready(function()
-	{
+	$(document).ready(function () {
 		/*
 			https://www.themoviedb.org/documentation/api?language=en-US
 
@@ -273,8 +389,9 @@
 			/find - The last but still very useful way to find data is with existing external IDs. For example, if you know the IMDB ID of a movie, TV show or person, you can plug that value into this method and we'll return anything that matches. This can be very useful when you have an existing tool and are adding our service to the mix."
 		*/
 
-		const moviedbAPI = "&api_key=4084c07502a720532f5068169281abff";		// https://www.themoviedb.org/documentation/api?language=en-US
-		const omdbAPI = "&apikey=1f18a935"									// http://www.omdbapi.com/
+		const moviedbAPI =
+			"&api_key=4084c07502a720532f5068169281abff"; // https://www.themoviedb.org/documentation/api?language=en-US
+		const omdbAPI = "&apikey=1f18a935" // http://www.omdbapi.com/
 
 		var moviedbMethod;
 
@@ -285,184 +402,196 @@
 
 		//SEARCH OPTIONS
 		// check for a change in sort or filter radios 
-		$("input[type='radio']").click(function()
-		{	
+		$("input[type='radio']").click(function () {
 			if (this.name == "sortFormRadio") //SORT OPTIONS 
-				sort = $("input[name='"+ this.name +"']:checked").val();  //elem.target
+				sort = $("input[name='" + this.name + "']:checked").val(); //elem.target
 			else if (this.name == "filterFormRadio") //FILTER OPTIONS
-				filter = $("input[name='"+ this.name +"']:checked").val();
+				filter = $("input[name='" + this.name + "']:checked").val();
 		});
 
 		// SEARCH
 		//$('#searchbar').on('input', function(event) 
-		$('.fieldinput').change(function(event) 
-		{
+		$('.fieldinput').change(function (event) {
 			$('#result').fadeOut();
 			$('#pagination-container').css("display", "none");
 			$('#pagination-container').empty();
 			$('#loading').fadeOut(50);
 
-			$('#pagination-container').pagination(
-			{
-				dataSource: function(done) 
-				{
-					$.ajax(
-					{
+			$('#pagination-container').pagination({
+				dataSource: function (done) {
+					$.ajax({
 						type: 'GET',
-						url: `https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff`,
-						success: function(response) 
-						{
+						url: `https://api.themoviedb.org/3/search/movie?query=` + $(
+								'#searchbar').val() +
+							`&api_key=4084c07502a720532f5068169281abff`,
+						success: function (response) {
 							$('#loading').fadeIn(50);
 
-							if (!(response.total_results == 0))	
+							if (!(response.total_results == 0))
 								$('#pagination-container').css("display", "block");
 
 							let result = [];
-							let totalPage = (response.total_pages * 20); // page size stores 20 items per page
+							let totalPage = (response.total_pages *
+								20); // page size stores 20 items per page
 
-							for (var i = 1; i < totalPage; i++) 
-							{
+							for (var i = 1; i < totalPage; i++) {
 								result.push(i);
 							}
 
-							done(result);							
+							done(result);
 						}
 					});
 				},
 				pageSize: 20,
-				ajax: 
-				{
-					beforeSend: function() 
-					{
+				ajax: {
+					beforeSend: function () {
 						console.log('Loading data ...');
 					}
 				},
-				callback: function(data, pagination) 
-				{
+				callback: function (data, pagination) {
 					// template method of yourself
 					if ($('#loading').css('display') == 'none')
 						$('#loading').fadeIn(50);
 
 
-					$.get(`https://api.themoviedb.org/3/search/movie?query=`+ $('#searchbar').val() +`&api_key=4084c07502a720532f5068169281abff&page=`+ pagination.pageNumber +``, function(rawdata)
-					{
-						var content;
+					$.get(`https://api.themoviedb.org/3/search/movie?query=` + $('#searchbar')
+						.val() + `&api_key=4084c07502a720532f5068169281abff&page=` +
+						pagination.pageNumber + ``,
+						function (rawdata) {
+							var content;
 
-						if (rawdata.total_results != 0)
-						{				
-							console.log(rawdata); // https://gifyu.com/image/w0pl
+							if (rawdata.total_results != 0) {
+								console.log(rawdata); // https://gifyu.com/image/w0pl
 
-							// to get search data - this fetches an array of movies with matches to the search
-							// themoviedb has a much more powerful search functionality 
-							// Whereas omdb has a better resources from on IMDB
+								// to get search data - this fetches an array of movies with matches to the search
+								// themoviedb has a much more powerful search functionality 
+								// Whereas omdb has a better resources from on IMDB
 
-							// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
+								// var request = `https://api.themoviedb.org/3/${moviedbMethod}/movie?query=${event.target.value}${sort}${sortMethod}&api_key=4084c07502a720532f5068169281abff`;
 
-							console.log("\n\n\n\n\n\n");
-							console.log("Data");
-							console.log(rawdata);
-							console.log("\n\n\n\n\n\n");
+								console.log("\n\n\n\n\n\n");
+								console.log("Data");
+								console.log(rawdata);
+								console.log("\n\n\n\n\n\n");
 
-							var result; 
-							result = getMovieData(rawdata.results, "search");
-							result = filterFunction(result, filter);
-							result = sortFunction(result, sort);
+								var result;
+								result = getMovieData(rawdata.results, "search");
+								result = filterFunction(result, filter);
+								result = sortFunction(result, sort);
 
-							$('#loading').fadeOut()
+								$('#loading').fadeOut()
 
-							$('#result').html('');
-							result.forEach(function(moviedata) 
-							{				
-								console.log("OMDB")
-								console.log(moviedata);
+								$('#result').html('');
+								result.forEach(function (moviedata) {
+									console.log("OMDB")
+									console.log(moviedata);
 
-								var imdbRating;
-								var imdbURL;
+									var imdbRating;
+									var imdbURL;
 
-								//ERROR CHECKING - so as not to get funny values displaying
-								// check if there is a rating given
-								var rating;
-								imdbRating = moviedata.imdbRating;
-								if (imdbRating === 'N/A' || imdbRating === 'undefined' || imdbRating === undefined || imdbRating === 'null' || imdbRating === null || isNaN(imdbRating)) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
-									rating = 'N/A';
-								else
-									rating = imdbRating + "/10";	
+									//ERROR CHECKING - so as not to get funny values displaying
+									// check if there is a rating given
+									var rating;
+									imdbRating = moviedata.imdbRating;
+									if (imdbRating === 'N/A' || imdbRating ===
+										'undefined' || imdbRating === undefined ||
+										imdbRating === 'null' || imdbRating ===
+										null || isNaN(imdbRating)
+									) /*imdbRating === NaN || imdbRating === "NaN" || movie.imdbID === NaN || movie.imdbID === "NaN"*/
+										rating = 'N/A';
+									else
+										rating = imdbRating + "/10";
 
-								// check if there is an IMDB ID to have a URL
-								// TECHNICALLY this should not have to be checked since we removed all moves without an ID
-								if (moviedata.imdbID === 'N/A' || moviedata.imdbID === 'undefined' || moviedata.imdbID === undefined || moviedata.imdbID === 'null' || moviedata.imdbID === null || rating === 'N/A')
-									imdbURL = "<p> </p>";
-								else
-									imdbURL = "<a href='"+ moviedata.imdbURL +"'>Go to IMDb Page</a>";
+									// check if there is an IMDB ID to have a URL
+									// TECHNICALLY this should not have to be checked since we removed all moves without an ID
+									if (moviedata.imdbID === 'N/A' || moviedata
+										.imdbID === 'undefined' || moviedata
+										.imdbID === undefined || moviedata
+										.imdbID === 'null' || moviedata.imdbID ===
+										null || rating === 'N/A')
+										imdbURL = "<p> </p>";
+									else
+										imdbURL = "<a href='" + moviedata.imdbURL +
+										"'>Go to IMDb Page</a>";
 
-								//check if there is a year provided
-								var yearRelease = moviedata.Year;
-								if (yearRelease === 'N/A' || yearRelease === 'undefined' || yearRelease === undefined || yearRelease === 'null' || yearRelease === null || isNaN(yearRelease) || yearRelease <= 0) 
-									yearRelease = 'N/A';
+									//check if there is a year provided
+									var yearRelease = moviedata.Year;
+									if (yearRelease === 'N/A' || yearRelease ===
+										'undefined' || yearRelease === undefined ||
+										yearRelease === 'null' || yearRelease ===
+										null || isNaN(yearRelease) ||
+										yearRelease <= 0)
+										yearRelease = 'N/A';
 
-								// check if there is a movie poster avaliable
-								var srcImage;
-								if (!(moviedata.poster_path === null))
-									srcImage = "https://image.tmdb.org/t/p/w342" + moviedata.poster_path;
-								else if (!(moviedata.Poster === 'N/A' || moviedata.Poster === undefined))
-									srcImage = moviedata.Poster;
-								else 
-									srcImage = "http://i67.tinypic.com/10fc1lg.jpg";	
+									// check if there is a movie poster avaliable
+									var srcImage;
+									if (!(moviedata.poster_path === null))
+										srcImage =
+										"https://image.tmdb.org/t/p/w342" +
+										moviedata.poster_path;
+									else if (!(moviedata.Poster === 'N/A' ||
+											moviedata.Poster === undefined))
+										srcImage = moviedata.Poster;
+									else
+										srcImage =
+										"./assets/images/noImagePoster.svg";
 
-								// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
-								var titleSize;
-								if(moviedata.title.length <= 65) 
-									titleSize = "font-size: 1.2rem";
-								else
-									 titleSize = "font-size: 100%";
-								
-								var originalTitle;
-								if (moviedata.title != moviedata.original_title)
-									originalTitle = `<h6>(`+ moviedata.original_title +`)</h6>`;
-								else
-									originalTitle = ""
-								
+									// AESTHETIC - This is just a font size chaninging effect for if the movie name is too long.
+									var titleSize;
+									if (moviedata.title.length <= 65)
+										titleSize = "font-size: 1.2rem";
+									else
+										titleSize = "font-size: 100%";
 
-								// this is creating a div with the content inside of it
-								content = 
-								`<div id="`+ moviedata.imdbID +`"class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('`+ moviedata.imdbID +`')">
+									var originalTitle;
+									if (moviedata.title != moviedata
+										.original_title)
+										originalTitle = `<h6>(` + moviedata
+										.original_title + `)</h6>`;
+									else
+										originalTitle = ""
+
+
+									// this is creating a div with the content inside of it
+									content =
+										`<div id="` + moviedata.imdbID +
+										`"class="moviecards col-sm-4 card border-secondary sm-3" style="max-width: 20rem; min-width: 20rem; align-items: center; border-color: #9933CC;" onmouseover="movieHoverIn(this)" onmouseout="movieHoverOut(this)" onclick="loadInfo('` +
+										moviedata.imdbID + `')">
 									<div class="card-header">
-										<h5 class="card-title" style="`+ titleSize +`">`+ moviedata.title +`</h5>
-										`+ originalTitle +`
+										<h5 class="card-title" style="` + titleSize + `">` + moviedata.title + `</h5>
+										` + originalTitle + `
 									</div>
 									<div class="card-body">
 										<i class="far fa-eye" style="float: right; font-size: large; display:none;"></i>
 										<br>
 										<img src="` + srcImage + `" style="width: 100%; height: 450px; spadding-top: 0.5rem;"/>
 										<br>
-										<p text-muted>Year Released: ` + yearRelease +`</p>
+										<p text-muted>Year Released: ` + yearRelease + `</p>
 									</div>
 									<div class="card-footer">
-										<p><i class="fas fa-star"></i> `+ rating +`</p>
+										<p><i class="fas fa-star"></i> ` + rating + `</p>
 										<br>
-										`+ imdbURL +`
+										` + imdbURL + `
 									</div>
 								</div>`;
-							
-								$('#result').append(content).hide().fadeIn(); 
-									
-							});							
-						}
-						else
-						{
-							$('#loading').fadeOut()
 
-							content = `<div class="col" style="text-align: center; font-size:large;"><p>no result were found</p></div>`;
-							$('#result').append(content).hide().fadeIn(); 
-						}
-					});
+									$('#result').append(content).hide().fadeIn();
+
+								});
+							} else {
+								$('#loading').fadeOut()
+
+								content =
+									`<div class="col" style="text-align: center; font-size:large;"><p>no result were found</p></div>`;
+								$('#result').append(content).hide().fadeIn();
+							}
+						});
 				}
 			});
-		});		
+		});
 	});
 
-	function getSortID(sortType)
-	{
+	function getSortID(sortType) {
 		if (sortType == "title")
 			return "sortFormNameSelector";
 		if (sortType == "Year")
@@ -473,35 +602,35 @@
 			return "sortFormGenreSelector";
 	}
 
-	function getMovieData(result, pageType)
-	{
-		for(let i = 0; i < result.length; i++) 
-		{
+	function getMovieData(result, pageType) {
+		for (let i = 0; i < result.length; i++) {
 			// get the IMDB ID
-			jQuery.ajaxSetup({async:false});
-			$.get("https://api.themoviedb.org/3/movie/"+ result[i].id +"/external_ids?api_key=4084c07502a720532f5068169281abff",function(movie)
-			{
-				appendMovieData(result[i], movie.imdb_id, "search");
-				console.log("\n\n\nget ID:" + movie.imdb_id);
-				console.log(result[i]);
-			});			
+			jQuery.ajaxSetup({
+				async: false
+			});
+			$.get("https://api.themoviedb.org/3/movie/" + result[i].id +
+				"/external_ids?api_key=4084c07502a720532f5068169281abff",
+				function (movie) {
+					appendMovieData(result[i], movie.imdb_id, "search");
+					console.log("\n\n\nget ID:" + movie.imdb_id);
+					console.log(result[i]);
+				});
 		}
 
 		result = removeNoID(result);
 
-		return result;	
+		return result;
 	}
 
 	// AESTHETIC - This is just a hovering affect
-	function movieHoverIn(elem)
-	{
+	function movieHoverIn(elem) {
 		$(elem).removeClass('border-secondary');
 		$(elem).addClass('border-info');
 
 		$(elem).children().css("color", "white");
 	};
-	function movieHoverOut(elem)
-	{
+
+	function movieHoverOut(elem) {
 		$(elem).addClass('border-secondary');
 		$(elem).removeClass('border-info');
 
@@ -510,9 +639,7 @@
 
 
 	// REDIRECT
-	function loadInfo(id)
-	{
-		location.href += 'movieInfoPage.php?id='+ id +'';
+	function loadInfo(id) {
+		location.href += 'movieInfoPage.php?id=' + id + '';
 	};
-	
 </script>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="342"
+   height="513"
+   viewBox="0 0 90.487498 135.73125"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="noImagePoster.svg"
+   inkscape:export-filename="C:\Users\bbdnet2135\Desktop\WAMP\apache2\htdocs\HypertubeSearch\noImagePoster.png"
+   inkscape:export-xdpi="256"
+   inkscape:export-ydpi="256">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.1476306"
+     inkscape:cx="91.762066"
+     inkscape:cy="189.86021"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     showguides="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="45.243749,67.865624"
+       orientation="1,0"
+       id="guide4083"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="171,256.5"
+       orientation="0,1"
+       id="guide4085"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="45.243749,67.865624"
+       orientation="0,1"
+       id="guide4087"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-161.26873)">
+    <rect
+       style="fill:#5d5d5d;fill-opacity:1;stroke-width:1.23137879"
+       id="rect41"
+       width="90.487503"
+       height="135.73125"
+       x="0"
+       y="161.26872" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.08429718px;line-height:1.25;font-family:'Yu Gothic';-inkscape-font-specification:'Yu Gothic';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.25210744"
+       x="46.937805"
+       y="204.47298"
+       id="text25"
+       transform="scale(0.95284703,1.0494864)"><tspan
+         sodipodi:role="line"
+         id="tspan23"
+         x="46.622673"
+         y="204.47298"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.10115719px;line-height:1.5;font-family:'Microsoft Sans Serif';-inkscape-font-specification:'Microsoft Sans Serif Bold';text-align:center;letter-spacing:-0.63026857px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:0.25210744">IMAGE</tspan><tspan
+         sodipodi:role="line"
+         x="46.622673"
+         y="222.62471"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.10115719px;line-height:1.5;font-family:'Microsoft Sans Serif';-inkscape-font-specification:'Microsoft Sans Serif Bold';text-align:center;letter-spacing:-0.63026857px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:0.25210744"
+         id="tspan27">NOT</tspan><tspan
+         sodipodi:role="line"
+         x="46.622669"
+         y="240.77644"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.10115719px;line-height:1.5;font-family:'Microsoft Sans Serif';-inkscape-font-specification:'Microsoft Sans Serif Bold';text-align:center;letter-spacing:-0.63026857px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:0.25210744"
+         id="tspan29">AVALIABLE</tspan></text>
+  </g>
+</svg>
